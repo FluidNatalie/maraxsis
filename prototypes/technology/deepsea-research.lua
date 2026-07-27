@@ -9,6 +9,7 @@ data:extend {{
     prerequisites = {
         "maraxsis-stone-centrifuging",
         "maraxsis-effect-transmission-2",
+        "maraxsis-sonar"
     },
     unit = {
         count = 2000,
