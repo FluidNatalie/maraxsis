@@ -87,7 +87,7 @@ data:extend {{
     type = "recipe",
     name = "maraxsis-fish-oil",
     enabled = false,
-    energy_required = 1,
+    energy_required = 0.25,
     ingredients = {
         {type = "item", name = "hydraulic-science-pack", amount = 1, quality_min = "normal", quality_max = "normal"},
     },
