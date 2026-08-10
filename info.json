@@ -19,8 +19,7 @@
     "(?) SchallTransportGroup",
     "(?) modules-t4",
     "(?) call-plumber >= 1.0.0",
-    "(?) skewer_planet_vesta",
-    "! force-fmf-grid"
+    "(?) skewer_planet_vesta"
   ],
   "quality_required": true,
   "space_travel_required": true,
