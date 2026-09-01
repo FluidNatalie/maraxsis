@@ -36,7 +36,12 @@ function maraxsis.make_hypno_technology(params)
     technology.type = "technology"
     technology.localised_name = {"technology-name.maraxsis-hypno-technology", {"space-location-name." .. params.space_location}}
     technology.localised_description = {"technology-description.maraxsis-hypno-technology", params.space_location}
-
+    PlanetsLib.rro.soft_insert(technology.unit.ingredients,{"automation-science-pack",1})
+    PlanetsLib.rro.soft_insert(technology.unit.ingredients,{"logistic-science-pack",1})
+    PlanetsLib.rro.soft_insert(technology.unit.ingredients,{"chemical-science-pack",1})
+    PlanetsLib.rro.soft_insert(technology.unit.ingredients,{"space-science-pack",1})
+    PlanetsLib.rro.soft_insert(technology.unit.ingredients,{"promethium-science-pack",1})
+    PlanetsLib.rro.soft_insert(technology.prerequisites,"promethium-science-pack")
     data:extend {technology}
 end
 
