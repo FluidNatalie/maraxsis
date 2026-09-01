@@ -333,29 +333,29 @@ do
         },
     }
 
-    maraxsis.make_hypno_recipe {
-        technology = "maraxsis-hypno-technology-nauvis",
-        recipe = "copper-plate",
-        swaps = {
-            {name = "iron-ore", swap_for = "copper-ore"},
-        },
-    }
+    -- maraxsis.make_hypno_recipe {
+    --     technology = "maraxsis-hypno-technology-nauvis",
+    --     recipe = "copper-plate",
+    --     swaps = {
+    --         {name = "iron-ore", swap_for = "copper-ore"},
+    --     },
+    -- }
 
-    maraxsis.make_hypno_recipe {
-        technology = "maraxsis-hypno-technology-nauvis",
-        recipe = "iron-plate",
-        swaps = {
-            {name = "copper-ore", swap_for = "iron-ore"},
-        },
-    }
+    -- maraxsis.make_hypno_recipe {
+    --     technology = "maraxsis-hypno-technology-nauvis",
+    --     recipe = "iron-plate",
+    --     swaps = {
+    --         {name = "copper-ore", swap_for = "iron-ore"},
+    --     },
+    -- }
 
-    maraxsis.make_hypno_recipe {
-        technology = "maraxsis-hypno-technology-nauvis",
-        recipe = "biter-egg",
-        swaps = {
-            {name = "biter-egg", swap_for = "biter-egg", quality_min = "uncommon"},
-        },
-    }
+    -- maraxsis.make_hypno_recipe {
+    --     technology = "maraxsis-hypno-technology-nauvis",
+    --     recipe = "biter-egg",
+    --     swaps = {
+    --         {name = "biter-egg", swap_for = "biter-egg", quality_min = "uncommon"},
+    --     },
+    -- }
 end
 
 -- vulcanus
@@ -390,41 +390,41 @@ do
         },
     }
 
-    maraxsis.make_hypno_recipe {
-        technology = "maraxsis-hypno-technology-vulcanus",
-        recipe = "casting-copper",
-        swaps = {
-            {name = "molten-iron", swap_for = "molten-copper"},
-        },
-    }
+    -- maraxsis.make_hypno_recipe {
+    --     technology = "maraxsis-hypno-technology-vulcanus",
+    --     recipe = "casting-copper",
+    --     swaps = {
+    --         {name = "molten-iron", swap_for = "molten-copper"},
+    --     },
+    -- }
 
-    maraxsis.make_hypno_recipe {
-        technology = "maraxsis-hypno-technology-vulcanus",
-        recipe = "casting-iron",
-        swaps = {
-            {name = "molten-copper", swap_for = "molten-iron"},
-        },
-    }
+    -- maraxsis.make_hypno_recipe {
+    --     technology = "maraxsis-hypno-technology-vulcanus",
+    --     recipe = "casting-iron",
+    --     swaps = {
+    --         {name = "molten-copper", swap_for = "molten-iron"},
+    --     },
+    -- }
 
-    maraxsis.make_hypno_recipe {
-        technology = "maraxsis-hypno-technology-vulcanus",
-        recipe = "casting-steel",
-        swaps = {
-            {name = "engine-unit", swap_for = "steel-plate"},
-            {name = "molten-iron", swap_for = "molten-iron", amount = 100},
-        },
-        energy_required = data.raw.recipe["engine-unit"].energy_required,
-    }
+    -- maraxsis.make_hypno_recipe {
+    --     technology = "maraxsis-hypno-technology-vulcanus",
+    --     recipe = "casting-steel",
+    --     swaps = {
+    --         {name = "engine-unit", swap_for = "steel-plate"},
+    --         {name = "molten-iron", swap_for = "molten-iron", amount = 100},
+    --     },
+    --     energy_required = data.raw.recipe["engine-unit"].energy_required,
+    -- }
 
-    maraxsis.make_hypno_recipe {
-        technology = "maraxsis-hypno-technology-vulcanus",
-        recipe = "tungsten-carbide",
-        swaps = {
-            {name = "tungsten-plate",   swap_for = "tungsten-ore"},
-            {name = "uranium-235",      swap_for = "carbon"},
-            {name = "tungsten-carbide", swap_for = "tungsten-carbide", quality_change = 1},
-        },
-    }
+    -- maraxsis.make_hypno_recipe {
+    --     technology = "maraxsis-hypno-technology-vulcanus",
+    --     recipe = "tungsten-carbide",
+    --     swaps = {
+    --         {name = "tungsten-plate",   swap_for = "tungsten-ore"},
+    --         {name = "uranium-235",      swap_for = "carbon"},
+    --         {name = "tungsten-carbide", swap_for = "tungsten-carbide", quality_change = 1},
+    --     },
+    -- }
 end
 
 -- fulgora
@@ -443,14 +443,14 @@ do
         },
     }
 
-    maraxsis.make_hypno_recipe {
-        technology = "maraxsis-hypno-technology-fulgora",
-        recipe = "holmium-solution",
-        swaps = {
-            {type = "item", name = "holmium-plate", swap_for = "holmium-solution", amount = 5},
-        },
+    -- maraxsis.make_hypno_recipe {
+    --     technology = "maraxsis-hypno-technology-fulgora",
+    --     recipe = "holmium-solution",
+    --     swaps = {
+    --         {type = "item", name = "holmium-plate", swap_for = "holmium-solution", amount = 5},
+    --     },
 
-    }
+    -- }
 
     if mods["Cerys-Moon-of-Fulgora"] then
         maraxsis.make_hypno_recipe {
@@ -596,23 +596,23 @@ do
         },
     }
 
-    maraxsis.make_hypno_recipe {
-        technology = "maraxsis-hypno-technology-maraxsis",
-        recipe = "microplastics",
-        swaps = {
-            {name = "raw-fish",     swap_for = "maraxsis-tropical-fish"},
-            {name = "yumako-mash",  swap_for = "jelly"},
-            {name = "railgun-ammo", swap_for = "piercing-rounds-magazine"},
-        },
-    }
+    -- maraxsis.make_hypno_recipe {
+    --     technology = "maraxsis-hypno-technology-maraxsis",
+    --     recipe = "microplastics",
+    --     swaps = {
+    --         {name = "raw-fish",     swap_for = "maraxsis-tropical-fish"},
+    --         {name = "yumako-mash",  swap_for = "jelly"},
+    --         {name = "railgun-ammo", swap_for = "piercing-rounds-magazine"},
+    --     },
+    -- }
 
-    maraxsis.make_hypno_recipe {
-        technology = "maraxsis-hypno-technology-maraxsis",
-        recipe = "maraxsis-carbon",
-        swaps = {
-            {name = "coal", swap_for = "carbon", amount = 2},
-        },
-    }
+    -- maraxsis.make_hypno_recipe {
+    --     technology = "maraxsis-hypno-technology-maraxsis",
+    --     recipe = "maraxsis-carbon",
+    --     swaps = {
+    --         {name = "coal", swap_for = "carbon", amount = 2},
+    --     },
+    -- }
 
     maraxsis.make_hypno_recipe {
         technology = "maraxsis-ooozma-confinement",
@@ -623,19 +623,19 @@ do
         },
     }
 
-    maraxsis.make_hypno_recipe {
-        technology = "maraxsis-hypno-technology-maraxsis",
-        recipe = "maraxsis-limestone-crushing",
-        swaps = {
-            {type = "item", name = "maraxsis-coral", swap_for = "calcite"},
-        },
-    }
+    -- maraxsis.make_hypno_recipe {
+    --     technology = "maraxsis-hypno-technology-maraxsis",
+    --     recipe = "maraxsis-limestone-crushing",
+    --     swaps = {
+    --         {type = "item", name = "maraxsis-coral", swap_for = "calcite"},
+    --     },
+    -- }
 
-    maraxsis.make_hypno_recipe {
-        technology = "maraxsis-project-seadragon",
-        recipe = "maraxsis-geothermal-sulfur",
-        swaps = {
-            {type = "fluid", name = "heavy-oil", swap_for = "sulfur", amount = 100},
-        },
-    }
+    -- maraxsis.make_hypno_recipe {
+    --     technology = "maraxsis-project-seadragon",
+    --     recipe = "maraxsis-geothermal-sulfur",
+    --     swaps = {
+    --         {type = "fluid", name = "heavy-oil", swap_for = "sulfur", amount = 100},
+    --     },
+    -- }
 end
