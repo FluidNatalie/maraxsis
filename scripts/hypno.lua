@@ -130,6 +130,7 @@ maraxsis.on_event(defines.events.on_object_destroyed, function(event)
     if target.type == "character" then
         target.force.script_trigger_research("maraxsis-ooozma-confinement")
     end
+    storage.hypno_stickers[event.registration_number] = nil
 end)
 
 local function apply_hypno_max_duration(player)
