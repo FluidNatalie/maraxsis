@@ -54,7 +54,7 @@ data:extend {{
             recipe = "maraxsis-liquid-atmosphere-barrel",
         },
     },
-    prerequisites = {"maraxsis-hypno-technology-aquilo"},
+    prerequisites = {"hydraulic-science-pack","cryogenic-science-pack"},
     unit = {
         count = 5000,
         ingredients = {
