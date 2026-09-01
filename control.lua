@@ -25,3 +25,9 @@ require "scripts.hypno"
 require "compat.call-plumber"
 
 maraxsis.finalize_events()
+
+
+
+if script.active_mods["gvv"] then require("__gvv__.gvv")() end
+
+
