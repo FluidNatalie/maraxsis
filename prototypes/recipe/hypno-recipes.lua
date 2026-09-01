@@ -7,15 +7,15 @@ function maraxsis.make_hypno_technology_icons(base)
         {
             icon = base,
             icon_size = 256,
-            scale = 0.40,
-            shift = {20, 20},
+            scale = 0.20,
+            shift = {45, -45},
         },
         {
             icon = "__maraxsis__/graphics/icons/hypno.png",
             icon_size = 64,
-            scale = 0.40 * 4,
-            shift = {20, 20},
-            tint = {0.5, 0.5, 0.5, 0.5},
+            scale = 0.20 * 4,
+            shift = {45, 45},
+            tint = {0.5, 0.5, 0.5, 1},
         },
     }
 end
@@ -79,32 +79,38 @@ function maraxsis.make_hypno_recipe(params)
 
     recipe.main_product = params.main_product or recipe.main_product or recipe.results[1].name
     local main_product = data.raw.item[recipe.main_product] or data.raw.fluid[recipe.main_product] or data.raw.capsule[recipe.main_product] or data.raw.module[recipe.main_product] or data.raw.armor[recipe.main_product] or data.raw.gun[recipe.main_product] or data.raw.ammo[recipe.main_product]
-
+    local new_icons = {}
     if not recipe.icons then
-        if type(recipe.icon) == "string" then
-            recipe.icons = {
-                {
-                    icon = recipe.icon,
-                    icon_size = recipe.icon_size or 64,
-                },
-            }
-        elseif main_product then
-            recipe.icons = main_product.icons or {
-                {
-                    icon = main_product.icon,
-                    icon_size = main_product.icon_size or 64,
-                },
-            }
-        else
-            recipe.icons = {}
-        end
+        recipe.icons = {}
+        
     end
 
-    table.insert(recipe.icons, {
+    table.insert(new_icons, {
         icon = "__maraxsis__/graphics/icons/hypno.png",
         icon_size = 64,
         tint = {0.5, 0.5, 0.5, 0.5},
     })
+
+    if type(recipe.icon) == "string" then
+            table.insert(new_icons ,
+                {
+                    icon = recipe.icon,
+                    icon_size = recipe.icon_size or 64,
+                }
+            )
+        elseif main_product then
+            table.insert(new_icons, main_product.icons or 
+                {
+                    icon = main_product.icon,
+                    icon_size = main_product.icon_size or 64,
+                }
+            )
+            
+    end
+    for _,icon in pairs(recipe.icons) do
+        table.insert(new_icons,icon)
+    end
+    recipe.icons = new_icons
 
     recipe.auto_recycle = false
     recipe.enabled = false
