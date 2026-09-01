@@ -527,22 +527,22 @@ local function extend_sticker_effects()
         icon = "__maraxsis__/graphics/icons/hypno.png",
         icon_size = 64,
         render_layer = "higher-object-above",
-        animation = {
-            layers = {
-                util.sprite_load("__maraxsis__/graphics/entity/hypno-sticker/particle-front", {
-                    priority = "high",
-                    frame_count = 50,
-                    scale = 2.0,
-                }),
-                util.sprite_load("__maraxsis__/graphics/entity/hypno-sticker/whirl-front", {
-                    priority = "high",
-                    frame_count = 50,
-                    scale = 2.0,
-                    animation_speed = 0.5,
-                    shift = util.by_pixel(0, 0),
-                }),
-            },
-        },
+        -- animation = {
+        --     layers = {
+        --         -- util.sprite_load("__maraxsis__/graphics/entity/hypno-sticker/particle-front", {
+        --         --     priority = "high",
+        --         --     frame_count = 50,
+        --         --     scale = 2.0,
+        --         -- }),
+        --         -- util.sprite_load("__maraxsis__/graphics/entity/hypno-sticker/whirl-front", {
+        --         --     priority = "high",
+        --         --     frame_count = 50,
+        --         --     scale = 2.0,
+        --         --     animation_speed = 0.5,
+        --         --     shift = util.by_pixel(0, 0),
+        --         -- }),
+        --     },
+        -- },
         damage_per_tick = "nil",
         target_movement_modifier = 0.25,
         duration_in_ticks = maraxsis_constants.ESTROGEN_DURATION,
@@ -575,22 +575,22 @@ local function extend_sticker_effects()
         icon = "__maraxsis__/graphics/icons/hypno.png",
         icon_size = 64,
         render_layer = "higher-object-under",
-        animation = {
-            layers = {
-                util.sprite_load("__maraxsis__/graphics/entity/hypno-sticker/particle-back", {
-                    priority = "high",
-                    frame_count = 50,
-                    scale = 2.0,
-                }),
-                util.sprite_load("__maraxsis__/graphics/entity/hypno-sticker/whirl-back", {
-                    priority = "high",
-                    frame_count = 50,
-                    scale = 2.0,
-                    animation_speed = 0.5,
-                    shift = util.by_pixel(0, -48),
-                }),
-            },
-        },
+        -- animation = {
+        --     layers = {
+        --         util.sprite_load("__maraxsis__/graphics/entity/hypno-sticker/particle-back", {
+        --             priority = "high",
+        --             frame_count = 50,
+        --             scale = 2.0,
+        --         }),
+        --         util.sprite_load("__maraxsis__/graphics/entity/hypno-sticker/whirl-back", {
+        --             priority = "high",
+        --             frame_count = 50,
+        --             scale = 2.0,
+        --             animation_speed = 0.5,
+        --             shift = util.by_pixel(0, -48),
+        --         }),
+        --     },
+        -- },
         duration_in_ticks = maraxsis_constants.ESTROGEN_DURATION,
     })}
 end
