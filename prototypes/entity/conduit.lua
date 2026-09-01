@@ -38,7 +38,7 @@ data:extend {{
             recipe = "maraxsis-conduit",
         },
     },
-    prerequisites = {"effect-transmission", "maraxsis-hypno-technology-fulgora", "epic-quality"},
+    prerequisites = {"effect-transmission", "hydraulic-science-pack", "epic-quality"},
     unit = {
         count = 5000,
         ingredients = {

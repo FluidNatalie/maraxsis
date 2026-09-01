@@ -49,7 +49,7 @@ data:extend {{
             recipe = "maraxsis-vitamin-infused-hydraulic-science",
         },
     },
-    prerequisites = {"maraxsis-hypno-technology-gleba", "maraxsis-liquid-atmosphere", "legendary-quality"},
+    prerequisites = {"hydraulic-science-pack", "maraxsis-liquid-atmosphere", "legendary-quality"},
     unit = {
         count = 5000,
         ingredients = {
