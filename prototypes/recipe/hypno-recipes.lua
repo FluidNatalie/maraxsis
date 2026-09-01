@@ -295,7 +295,7 @@ do
             {name = "production-science-pack",                                   swap_for = "production-science-pack", quality_change = quality_change},
             {name = "barrel",                                                    swap_for = "rail"},
             {name = "agricultural-tower",                                        swap_for = "electric-furnace"},
-            {name = mods["rigor-module"] and "rigor-module" or "quality-module", swap_for = "productivity-module"},
+            {name = "quality-module", swap_for = "productivity-module"},
         },
     }
 
