@@ -1,4 +1,9 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.34.58
+Date: 2026-09-09
+  Balancing:
+    - Supercritical steam is now 10 times hotter. Oversized Steam turbine now consumes 1/10 as much supercritical steam as before.
+---------------------------------------------------------------------------------------------------
 Version: 1.34.57
 Date: 2026-09-09
   Balancing:
