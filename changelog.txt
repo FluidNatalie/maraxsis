@@ -1,4 +1,15 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.34.57
+Date: 2026-09-09
+  Balancing:
+    - Boosted the heavy oil requirement for super sealant substance from 25 to 200.
+    - Buffed maraxsis solar power in space from 75% to 150%
+    - Increased required energy consumption for the hydro plant from 2MW to 3MW.
+    - Reduced the required crafting time of maraxsis fish oil from 1 second to 0.25 seconds.
+  Changes:
+    - Hydro packs can now be converted to fish oil via hand crafting.
+    - Modified the entity icon for pressure dome lamp.
+---------------------------------------------------------------------------------------------------
 Version: 1.34.56
 Date: 2026-09-09
   Balancing:
