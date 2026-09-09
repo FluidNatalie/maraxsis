@@ -1,4 +1,14 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.34.56
+Date: 2026-09-09
+  Balancing:
+    - Reduced the cost of promethium quality techs.
+  Bugfixes:
+    - Fixed geothermal generator and oversized steam turbine duct connections having wrong max extent length.
+    - Fixed nuclear ground creating buildable nuclear tiles on maraxsis.
+  Changes:
+    - Updated minimum required factorio version from 2.1.9 to 2.1.12
+---------------------------------------------------------------------------------------------------
 Version: 1.34.55
 Date: 2026-09-09
   Compatibility:
