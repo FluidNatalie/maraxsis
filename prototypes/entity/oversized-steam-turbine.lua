@@ -287,7 +287,7 @@ data:extend {{
             percent = 70
         }
     },
-    max_fluid_usage = 725 / second, -- at normal quality
+    max_fluid_usage = 72.5 / second, -- at normal quality
     collision_box = {{-1.25, -2.35 - 2}, {1.25, 2.35 + 2}},
     selection_box = {{-1.5, -2.5 - 2}, {1.5, 2.5 + 2}},
     damaged_trigger_effect = hit_effects.entity(),

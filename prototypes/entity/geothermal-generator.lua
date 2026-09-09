@@ -255,7 +255,7 @@ data:extend {{
     name = "maraxsis-supercritical-steam",
     icon = "__maraxsis__/graphics/icons/supercritical-steam.png",
     icon_size = 64,
-    default_temperature = 2000,
+    default_temperature = 20000,
     max_temperature = 20000,
     heat_capacity = (225 / 6525) .. "kJ",
     base_flow_rate = data.raw.fluid.steam.base_flow_rate,
