@@ -1,4 +1,16 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.34.54
+Date: 2026-09-09
+  Balancing:
+    - The duct intake and duct exhaust pumps now both require 200kW of power.
+  Bugfixes:
+    - Fixed crash when vesta h2o recipe was removed. Resolves https://github.com/notnotmelon/maraxsis/issues/419
+    - Fixed supercritical steam would explode your cryo plant.
+    - Fixed that the drowning protection afforded by abyssal diving gear was nonfunctional.
+    - The maraxsis fish oil hidden recipe is now actually hidden.
+  Changes:
+    - Updated author list and homepage link.
+---------------------------------------------------------------------------------------------------
 Version: 1.34.53
 Date: 2026-09-09
   Changes:
