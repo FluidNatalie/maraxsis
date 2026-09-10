@@ -23,3 +23,4 @@ require "scripts.legendary-quality"
 require "compat.call-plumber"
 
 maraxsis.finalize_events()
+if script.active_mods["gvv"] then require("__gvv__.gvv")() end
