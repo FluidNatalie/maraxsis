@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.34.59
+Date: 2026-09-10
+  Compatibility:
+    - Added gvv support to assist in debugging.
+  Changes:
+    - Added remote interface returning Maraxsis storage.
+---------------------------------------------------------------------------------------------------
 Version: 1.34.58
 Date: 2026-09-09
   Balancing:
