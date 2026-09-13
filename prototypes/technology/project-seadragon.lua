@@ -22,10 +22,6 @@ data:extend {{
         {
             type = "unlock-recipe",
             recipe = "maraxsis-petroleum-gas-cracking"
-        },
-        {
-            type = "unlock-recipe",
-            recipe = "maraxsis-bio-oil"
         }
     },
     prerequisites = {"hydraulic-science-pack", "coal-liquefaction"},
