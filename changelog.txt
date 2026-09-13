@@ -1,4 +1,9 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.35.0
+Date: 2026-09-13
+  Features:
+    - Foundation can now be placed on lava in the trench. Paved lava behaves like the rest of the trench floor, so geothermal generators cannot be placed on it. Thank you Blushies!
+---------------------------------------------------------------------------------------------------
 Version: 1.34.61
 Date: 2026-09-12
   Locale:
