@@ -8,6 +8,7 @@ require "scripts.map-gen.maraxsis-trench"
 require "scripts.submarine"
 require "scripts.nightvision"
 require "scripts.pressure-dome"
+require "scripts.trench-foundation"
 require "scripts.swimming"
 require "scripts.trench-duct"
 require "scripts.abyssal-diving-gear"
@@ -23,3 +24,4 @@ require "scripts.legendary-quality"
 require "compat.call-plumber"
 
 maraxsis.finalize_events()
+if script.active_mods["gvv"] then require("__gvv__.gvv")() end
