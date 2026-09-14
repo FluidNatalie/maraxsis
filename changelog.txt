@@ -1,4 +1,14 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.36.0
+Date: 2026-09-14
+  Features:
+    - Nukes in the trench's lava biome now leave lava
+    - Nukes now leave nuked seabed on Maraxsis and in the trench. It keeps the same building rules as the seabed around it.
+  Bugfixes:
+    - Nukes and big cliff explosives no longer leave dust floating over the trench entrance on Maraxsis.
+    - the Fat Man now works the same way regular nukes do - Vulcanus gets lava, Aquilo gets ocean
+    - The lava glow in the trench can no longer be destroyed
+---------------------------------------------------------------------------------------------------
 Version: 1.35.1
 Date: 2026-09-13
   Balancing:
