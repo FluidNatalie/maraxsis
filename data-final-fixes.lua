@@ -167,6 +167,17 @@ if collision_mask_util.masks_collide(sand_mask, hydro_plant_mask) then
     )
 end
 
+--- Prevent Nauvis nuke effects on Maraxsis (keyed by pressure, so all planets
+--- with sufficient pressure).
 if data.raw["explosion"]["nuke-effects-nauvis"] then
     PlanetsLib.restrict_surface_conditions(data.raw["explosion"]["nuke-effects-nauvis"], {property = "pressure", max = 50000})
+end
+
+--- The trench's lava glow is made possible by these lamps. This prevents them
+--- from being able to be destroyed, including by damage types added by other
+--- mods.
+local lava_lamp = data.raw["simple-entity"]["maraxsis-lava-lamp"]
+lava_lamp.resistances = {}
+for damage_type in pairs(data.raw["damage-type"]) do
+    table.insert(lava_lamp.resistances, {type = damage_type, percent = 100})
 end
