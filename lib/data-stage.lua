@@ -1,5 +1,5 @@
 -- Adds helper functions for data stage. Shared across all pymods and adapted for use in maraxsis
-
+local table = require("lib.table")
 maraxsis.on_event = function() end
 
 ---Returns a 1x1 empty image.

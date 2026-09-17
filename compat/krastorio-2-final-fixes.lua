@@ -1,4 +1,5 @@
 if not mods["Krastorio2-spaced-out"] then return end
+local table = require("lib.table")
 
 local new_ingredients = {}
 for _, ingredient in pairs(data.raw.recipe["promethium-science-pack"].ingredients) do
