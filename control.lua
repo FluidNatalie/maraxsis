@@ -26,6 +26,7 @@ require "scripts.sand-extractor"
 require "scripts.oversized-steam-turbine"
 require "scripts.hydraulic-science-pack"
 require "scripts.legendary-quality"
+require "scripts.matriarch"
 
 require "compat.call-plumber"
 
