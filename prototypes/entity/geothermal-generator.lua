@@ -248,6 +248,12 @@ data:extend { {
     icon_draw_specification = { scale = 1.75, shift = { 0, -0.3 } },
     energy_usage = "1W",
     collision_mask = { layers = { object = true, ground_tile = true } },
+    tile_buildability_rules = {
+        {
+            required_tiles = { layers = { lava_tile = true } },
+            area = { { -2.9, -2.9 }, { 2.9, 2.9 } },
+        },
+    },
 } }
 
 data:extend {{
