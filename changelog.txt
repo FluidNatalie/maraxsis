@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.37.0
+Date: 2026-09-18
+  Features:
+    - Enabled migration support in both directions between Modern and Classic.
+  Bugfixes:
+    - Geothermal generators can no longer be placed on water and must be placed on lava
+---------------------------------------------------------------------------------------------------
 Version: 1.36.3
 Date: 2026-09-17
   Bugfixes:
