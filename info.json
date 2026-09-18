@@ -7,7 +7,7 @@
   "version": "1.36.3",
   "factorio_version": "2.1",
   "dependencies": [
-    "base >= 2.1.12",
+    "base >= 2.1.18",
     "space-age >= 2.1.9",
     "quality >= 2.1.9",
     "PlanetsLib >= 1.20.3",
@@ -21,6 +21,7 @@
     "(?) call-plumber >= 1.0.0",
     "(?) skewer_planet_vesta"
   ],
+  "migrates_from": ["maraxsis-classic"],
   "quality_required": true,
   "space_travel_required": true,
   "spoiling_required": true,
