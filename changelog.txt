@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.38.0
+Date: 2026-09-19
+  Features:
+    - Machines that need a pressure dome can now be built on the seabed, where they are flooded. Domes can be mined with machines inside; those machines flood until a new dome is built over them. Accumulators and heat pipes now work on the seabed.
+  Optimizations:
+    - All events that involve entity destruction now filter out asteroid destroy events. Should improve performance on large saves.
+---------------------------------------------------------------------------------------------------
 Version: 1.37.0
 Date: 2026-09-18
   Features:
