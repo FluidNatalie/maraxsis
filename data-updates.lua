@@ -101,6 +101,11 @@ for recipe, category in pairs {
 end
 data.raw.recipe["empty-maraxsis-atmosphere-barrel"].results[1].temperature = 25
 
+data.raw.recipe["limestone-recycling"].results = {
+    {type = "item", name = maraxsis_constants.SAND_ITEM_NAME, amount = 1, independent_probability = 0.15},
+    {type = "item", name = "limestone", amount = 1, independent_probability = 0.10, ignored_by_stats = 1},
+}
+
 require "prototypes.item-subgroups"
 
 if mods["assembler-pipe-passthrough"] then
