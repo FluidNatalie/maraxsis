@@ -9,12 +9,12 @@ bubbles.animation = {
     flags = {"smoke"},
     frame_count = 1,
 }
-bubbles.duration = 180
+bubbles.duration = 360
 bubbles.cyclic = true
 bubbles.show_when_smoke_off = true
 bubbles.start_scale = 1
 bubbles.end_scale = 5
-bubbles.fade_away_duration = 120
+bubbles.fade_away_duration = 60
 data:extend {bubbles}
 
 local submarine_bubbles = table.deepcopy(bubbles)

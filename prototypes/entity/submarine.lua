@@ -218,13 +218,15 @@ for i = 1, 2 do
             {
                 name = "maraxsis-submarine-bubbles",
                 deviation = {0.35, 0.35},
-                frequency = 150,
-                position = {0, 0},
-                slow_down_factor = 1,
+                frequency = 75,
+                position = {0, 2},
+                --slow_down_factor = 1,
                 starting_frame = 3,
                 starting_frame_deviation = 50,
                 starting_frame_speed = 0,
                 starting_frame_speed_deviation = 5,
+                vertical_speed_slowdown=0,
+                starting_vertical_speed=2,
             }
         }
     }
