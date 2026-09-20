@@ -39,7 +39,6 @@ require "prototypes.technology.omega-3"
 require "prototypes.technology.stone-centrifuging"
 require "prototypes.technology.deepsea-research"
 require "prototypes.recipe.recipes"
-require "prototypes.recipe.deepsea-research"
 
 require "prototypes.circuit-connector-definitions"
 require "prototypes.tiles"
