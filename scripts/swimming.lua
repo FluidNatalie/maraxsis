@@ -192,23 +192,23 @@ local switch_surface_button_pattern =  "maraxsis%-switch%-surface%-button"
 
 maraxsis.on_event({defines.events.on_player_controller_changed,defines.events.on_player_changed_surface},function(event)
     local player = game.players[event.player_index]
-    local top = player.gui.top
+    local left = player.gui.left
     local surface = player.surface
     if not rro.contains({"maraxsis","maraxsis-trench"},surface.name) then 
-        if top[switch_surface_button_name] then
-            top[switch_surface_button_name].destroy()
+        if left[switch_surface_button_name] then
+            left[switch_surface_button_name].destroy()
         end
         return
 
     end
     if player.controller_type == defines.controllers.remote then
-        if top[switch_surface_button_name] then
-            top[switch_surface_button_name].destroy()
+        if left[switch_surface_button_name] then
+            left[switch_surface_button_name].destroy()
         end
         local other_surface_prototype = game.planets[get_other_surface(surface)].prototype
         if not game.planets[get_other_surface(surface)].surface then return end
         local width = maraxsis.get_gui_locale(player.locale).switch_surface_button_width
-        local switch_surface_button = top.add{
+        local switch_surface_button = left.add{
             type="button",
             name = switch_surface_button_name,
             caption = {"gui.maraxsis-change-surfaces",other_surface_prototype.localised_name,other_surface_prototype.name},
@@ -218,8 +218,8 @@ maraxsis.on_event({defines.events.on_player_controller_changed,defines.events.on
         switch_surface_button.style.minimal_width = width
         switch_surface_button.style.maximal_width = width
     else
-        if top[switch_surface_button_name] then
-            top[switch_surface_button_name].destroy()
+        if left[switch_surface_button_name] then
+            left[switch_surface_button_name].destroy()
         end
         
     end
