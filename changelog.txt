@@ -1,4 +1,9 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.39.2
+Date: 2026-09-21
+  Changes:
+    - Improved the oxygen meter. Slightly raised the thickness of the bar to make the label fit better. When the bar is fully filled, the bar is blue. As your oxygen drains, the bar's color starts green and slowly turns red.
+---------------------------------------------------------------------------------------------------
 Version: 1.39.1
 Date: 2026-09-21
   Compatibility:
