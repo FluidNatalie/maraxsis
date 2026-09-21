@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.39.0
+Date: 2026-09-21
+  Features:
+    - Added button and hotkey to remote view on Maraxsis to quickly switch between the surface and trench. Replaces the previous "Open maraxsis trench to remote view" interaction.
+  Bugfixes:
+    - Fixed crash that would occur when a dome's regulator cannot be placed.
+---------------------------------------------------------------------------------------------------
 Version: 1.38.1
 Date: 2026-09-20
   Optimizations:
