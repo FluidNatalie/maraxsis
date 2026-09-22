@@ -1,4 +1,9 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.39.3
+Date: 2026-09-22
+  Compatibility:
+    - Raised required Factorio version to 2.1.20 and updated changes to entity/item fuel categories to work around 2.1.20's breaking changes.
+---------------------------------------------------------------------------------------------------
 Version: 1.39.2
 Date: 2026-09-21
   Changes:
