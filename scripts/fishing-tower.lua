@@ -67,11 +67,30 @@ local function register_plant(plant, quality)
     end
 end
 
-local function harvest_plant(plant, inv_buffer)
+--- The engine hands a tower its quality bonus but never acts on it, so roll it ourselves.
+--- Each success has a tenth of the chance of going one level higher, as elsewhere.
+--- @param quality LuaQualityPrototype
+--- @param chance double
+--- @return LuaQualityPrototype
+local function roll_quality(quality, chance)
+    while quality.next and math.random() < chance do
+        quality = quality.next
+        chance = chance * 0.1
+    end
+    return quality
+end
+
+--- @param tower LuaEntity?
+local function harvest_plant(plant, inv_buffer, tower)
     local key = hash_string(plant.position.x, plant.position.y, plant.surface.name)
     local harvest_quality = storage.quality_plants[key]
-    if not harvest_quality then return end
     storage.quality_plants[key] = nil
+
+    local module_quality_chance = tower and tower.effects and tower.effects.quality
+    if module_quality_chance and module_quality_chance > 0 then
+        harvest_quality = roll_quality(harvest_quality or prototypes.quality.normal, module_quality_chance)
+    end
+    if not harvest_quality then return end
 
     for i = 1, #inv_buffer do
         local stack = inv_buffer[i]
@@ -89,7 +108,7 @@ local function harvest_plant(plant, inv_buffer)
 end
 
 maraxsis.on_event(defines.events.on_tower_mined_plant, function(event)
-    harvest_plant(event.plant, event.buffer)
+    harvest_plant(event.plant, event.buffer, event.tower)
 end)
 
 maraxsis.on_event(defines.events.on_player_mined_entity, function(event)
@@ -111,5 +130,10 @@ maraxsis.on_event(defines.events.on_tower_planted_seed, function(event)
     local plant = event.plant
     if plant.name == "maraxsis-fishing-plant" then
         register_plant(plant, quality)
+        local speed_bonus = event.tower.speed_bonus
+        if speed_bonus > 0 then
+            local growth_ticks = prototypes.entity[plant.name].growth_ticks
+            plant.tick_grown = game.tick + growth_ticks / (1 + speed_bonus)
+        end
     end
 end)
