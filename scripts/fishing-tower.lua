@@ -67,8 +67,9 @@ local function register_plant(plant, quality)
     end
 end
 
---- The engine hands a tower its quality bonus but never acts on it, so roll it ourselves.
---- Each success has a tenth of the chance of going one level higher, as elsewhere.
+--- The tower gets a quality modifier from the modules, but doesn't actually
+--- account for quality when planting or harvesting, so we have to do it
+--- ourselves. Same quality heuristic as in the quality mod.
 --- @param quality LuaQualityPrototype
 --- @param chance double
 --- @return LuaQualityPrototype
@@ -128,8 +129,12 @@ end)
 maraxsis.on_event(defines.events.on_tower_planted_seed, function(event)
     local quality = event.seed.quality
     local plant = event.plant
-    if plant.name == "maraxsis-fishing-plant" then
+    if plant.name == "maraxsis-fishing-plant" or plant.name == "maraxsis-wyrm-bait" then
         register_plant(plant, quality)
+    end
+    --- We only need to implement speed for tropical fish farming since wyrms
+    --- always need to wait on the matriarch.
+    if plant.name == "maraxsis-fishing-plant" then
         local speed_bonus = event.tower.speed_bonus
         if speed_bonus > 0 then
             local growth_ticks = prototypes.entity[plant.name].growth_ticks

@@ -69,7 +69,7 @@ fishing_tower.emissions_per_second = nil
 --- its planting spots when it has room to bank what it mines, so a second slot turns the
 --- tower into a coral harvester.
 fishing_tower.output_inventory_size = 1
-fishing_tower.accepted_seeds = {"maraxsis-fish-food"}
+fishing_tower.accepted_seeds = {"maraxsis-fish-food", "maraxsis-wyrm-confinement-cell"}
 fishing_tower.energy_source.emissions_per_minute = nil
 fishing_tower.radius_visualisation_picture = {
     filename = "__maraxsis__/graphics/entity/fishing-tower/radius-visualization.png",

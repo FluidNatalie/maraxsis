@@ -28,6 +28,7 @@ data:extend {{
     icon = "__maraxsis__/graphics/icons/wyrm-confinement-cell.png",
     icon_size = 64,
     stack_size = 10,
+    plant_result = "maraxsis-wyrm-bait",
 }}
 
 local wyrm_variants = {}
