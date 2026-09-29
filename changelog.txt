@@ -1,4 +1,9 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.39.8
+Date: 2026-09-29
+  Optimizations:
+    - Improved performance of domes in multiplayer and when no players are looking at surfaces with domes on them.
+---------------------------------------------------------------------------------------------------
 Version: 1.39.7
 Date: 2026-09-28
   Balancing:
