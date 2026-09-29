@@ -1,4 +1,9 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.39.9
+Date: 2026-09-29
+  Optimizations:
+    - Dome opacity change on focus now updates every tick. The associated scripts now run with an overall reduced performance cost, especially as player count and dome count increases.
+---------------------------------------------------------------------------------------------------
 Version: 1.39.8
 Date: 2026-09-29
   Optimizations:
