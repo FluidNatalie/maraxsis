@@ -66,6 +66,20 @@ for i = 1, 15 do
     TROPICAL_FISH_NAMES[i] = name
 end
 
+local PRESSURE_DOMES = {
+    ["maraxsis-pressure-dome"] = {
+        octagon_size = 16.5,
+        PRESSURE_DOME_TILE = "maraxsis-pressure-dome-tile",
+        regulator = "maraxsis-regulator",
+        pressure_dome = "maraxsis-pressure-dome",
+        dome_collider = "maraxsis-pressure-dome-collision",
+        regulator_fluidbox_prefix = "maraxsis-regulator-fluidbox-",
+        sprite = "maraxsis-pressure-dome-sprite",
+        lamp = "maraxsis-pressure-dome-lamp",
+        combinator = "maraxsis-pressure-dome-combinator",
+    },
+}
+
 data:extend {{
     type = "mod-data",
     name = "maraxsis-constants", --Data that was previously defined in a control-level script, now defined in data, allowing other mods to configure these constants.
@@ -74,6 +88,7 @@ data:extend {{
         -- This data is called in scripts.constants.
         TRENCH_MOVEMENT_FACTOR = TRENCH_MOVEMENT_FACTOR,
         SUBMARINES = SUBMARINES,
+        PRESSURE_DOMES = PRESSURE_DOMES,
         TRENCH_SURFACE_NAME = TRENCH_SURFACE_NAME,
         MARAXSIS_SURFACE_NAME = MARAXSIS_SURFACE_NAME,
         MARAXSIS_SURFACES = MARAXSIS_SURFACES,

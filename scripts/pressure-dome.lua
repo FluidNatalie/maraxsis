@@ -1,15 +1,7 @@
 local rro = require("__PlanetsLib__.lib.remove-replace-object")
 
-local domes = {
-    ["maraxsis-pressure-dome"] = {
-        octagon_size = 16.5,
-        PRESSURE_DOME_TILE = "maraxsis-pressure-dome-tile",
-        regulator = "maraxsis-regulator",
-        pressure_dome = "maraxsis-pressure-dome",
-        dome_collider = "maraxsis-pressure-dome-collision",
-        sprite = "maraxsis-pressure-dome-sprite",
-    },
-}
+local domes = maraxsis_constants.PRESSURE_DOMES
+
 local PRESSURE_DOME_TILES = {
 
 }
@@ -42,12 +34,15 @@ for _,dome_data in pairs(domes) do
     rro.soft_insert(PRESSURE_DOME_TILES,dome_data.PRESSURE_DOME_TILE)
     rro.soft_insert(MARAXSIS_REGULATORS,dome_data.regulator)
     rro.soft_insert(PRESSURE_DOMES,dome_data.pressure_dome)
-    rro.soft_insert(MARAXSIS_DOME_COLLIDERS,dome_data.pressure_dome)
+    rro.soft_insert(MARAXSIS_DOME_COLLIDERS,dome_data.dome_collider)
 end
 
 maraxsis.on_event(maraxsis.events.on_init(), function()
     if remote.interfaces["PickerDollies"] and remote.interfaces["PickerDollies"]["add_blacklist_name"] then
-        remote.call("PickerDollies", "add_blacklist_name", "maraxsis-pressure-dome")
+        for dome_name,_ in pairs(domes) do
+            remote.call("PickerDollies", "add_blacklist_name", dome_name)
+        end
+        
     end
 
     storage.pressure_domes = storage.pressure_domes or {}
@@ -243,9 +238,9 @@ end)
 local function create_dome_light(pressure_dome_data)
     local surface = pressure_dome_data.surface
     if not surface.valid then return end
-
+    local dome_prototype = domes[pressure_dome_data.prototype]
     local light = surface.create_entity {
-        name = "maraxsis-pressure-dome-lamp",
+        name = dome_prototype.lamp,
         position = pressure_dome_data.position,
         force = pressure_dome_data.force_index,
         quality = pressure_dome_data.quality,
@@ -263,13 +258,14 @@ end
 
 local function create_dome_combinator(pressure_dome_data)
     local light = pressure_dome_data.light
+    local dome_prototype = domes[pressure_dome_data.prototype]
     if not light or not light.valid then
         create_dome_light(pressure_dome_data)
         light = pressure_dome_data.light
     end
 
     local combinator = light.surface.create_entity {
-        name = "maraxsis-pressure-dome-combinator",
+        name = dome_prototype.combinator,
         position = light.position,
         force = light.force,
         quality = light.quality,
@@ -520,7 +516,7 @@ local function place_collision_boxes(pressure_dome_data, health, player)
     for _, pos_and_orient in pairs(positions_and_orientations) do
         local pos_x, pos_y, orientation = pos_and_orient[1], pos_and_orient[2], pos_and_orient[3]
         local collision_box = surface.create_entity {
-            name = "maraxsis-pressure-dome-collision",
+            name = pressure_dome_prototype.dome_collider,
             position = {pos_x, pos_y},
             force = force,
             quality = quality,
@@ -565,7 +561,7 @@ local function check_can_build_dome(surface, position, dome_prototype)
             {x - octagon_size, y - octagon_size},
             {x + octagon_size, y + octagon_size},
         },
-        collision_mask = prototypes.entity["maraxsis-regulator"].collision_mask.layers,
+        collision_mask = prototypes.entity[dome_prototype.regulator].collision_mask.layers,
     }
 
     for _, e in pairs(entities_inside_square) do
@@ -577,7 +573,7 @@ local function check_can_build_dome(surface, position, dome_prototype)
             if e.force.name == "neutral" or layers[maraxsis_dome_collision_mask] then
                 error_message = error_message or {"cant-build-reason.entity-in-the-way", e.localised_name}
                 colliding_entities[#colliding_entities + 1] = e
-            elseif surface.entity_prototype_collides("maraxsis-regulator", position, false) then
+            elseif surface.entity_prototype_collides(dome_prototype.regulator, position, false) then
                 error_message = error_message or {"cant-build-reason.entity-in-the-way", e.localised_name}
                 colliding_entities[#colliding_entities + 1] = e
             elseif layers.object then
@@ -642,7 +638,7 @@ local function place_regulator(pressure_dome_data)
     local regulator_fluidbox = pressure_dome_data.regulator_fluidbox
     if not regulator_fluidbox or not regulator_fluidbox.valid then
         regulator_fluidbox = surface.create_entity {
-            name = "maraxsis-regulator-fluidbox-" .. quality.name,
+            name = prototype.regulator_fluidbox_prefix .. quality.name,
             position = {x, y},
             force = force,
             create_build_effect_smoke = false,
@@ -692,10 +688,11 @@ local function rerender_all_domes()
         local surface = pressure_dome_data.surface
         if surface.valid then
             pressure_dome_data.entity.destroy()
+            local prototype = domes[pressure_dome_data.prototype]
             pressure_dome_data.opacity = pressure_dome_data.opacity or 255
             local opacity = pressure_dome_data.opacity
             local entity = rendering.draw_sprite {
-                sprite = "maraxsis-pressure-dome-sprite",
+                sprite = prototype.sprite,
                 render_layer = "higher-object-above",
                 target = pressure_dome_data.position,
                 surface = pressure_dome_data.surface,
@@ -960,6 +957,7 @@ maraxsis.on_event(maraxsis.events.on_destroyed(), function(event)
         local pressure_dome_data = storage.pressure_domes[render_object_id]
         cleanup_dome_for_deletion(pressure_dome_data, event.buffer)
         storage.pressure_domes[render_object_id] = nil
+        storage.pressure_domes_transparent[render_object_id] = nil
         if event.name == defines.events.on_entity_died then
             on_dome_died(event, pressure_dome_data)
         end
@@ -1012,7 +1010,6 @@ maraxsis.on_event(defines.events.on_entity_damaged, function(event)
     local entity = event.entity
     if not entity.valid then return end
 
-    --if entity.name ~= "maraxsis-pressure-dome-collision" then return end
     if rro.contains(MARAXSIS_DOME_COLLIDERS,entity.name) then return end
     local pressure_dome_data = find_pressure_dome_data_by_collision_entity(entity)
     if not pressure_dome_data then return end
@@ -1051,7 +1048,6 @@ maraxsis.on_event(maraxsis.events.on_entity_clicked(), function(event)
     local entity = player.selected
     if not entity or not entity.valid then return end
 
-    --if entity.name ~= "maraxsis-pressure-dome-collision" then return end
     if not rro.contains(MARAXSIS_DOME_COLLIDERS,entity.name) then return end
     local pressure_dome_data = find_pressure_dome_data_by_collision_entity(entity)
     if not pressure_dome_data then return end
@@ -1098,7 +1094,6 @@ maraxsis.on_event(maraxsis.events.on_built(), function(event)
     local is_ghost = entity.name == "entity-ghost" -- this would only be false in the editor mode.
 
     local name = is_ghost and entity.ghost_name or entity.name
-    --if name ~= "maraxsis-regulator" then return end
     if not rro.contains(MARAXSIS_REGULATORS,name) then return end
 
     local dome_prototype = domes[name]
