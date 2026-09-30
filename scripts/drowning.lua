@@ -46,7 +46,7 @@ end
 
 
 
-local function get_gui(player)
+local function get_gui(player, has_abyssal_gear)
     local screen = player.gui.screen
     if screen.oxygen_meter then return screen.oxygen_meter end
 
@@ -79,7 +79,7 @@ local function get_gui(player)
         type = "progressbar",
         value = 1,
         name = "oxygen",
-        caption = stringify_oxygen_stats(player),
+        caption = has_abyssal_gear and {"gui.oxygen-meter-infinity"} or stringify_oxygen_stats(player),
     }
     oxygen.style.bar_width = height
     oxygen.style.height = height
@@ -111,6 +111,12 @@ local function update_gui(player,has_abyssal_gear)
     get_gui(player).frame.oxygen.caption = has_abyssal_gear and {"gui.oxygen-meter-infinity"} or stringify_oxygen_stats(player)
 end
 
+local is_abyssal_diving_gear = {
+    ["maraxsis-abyssal-diving-gear"] = true,
+    ["maraxsis-abyssal-diving-gear-disabled"] = true,
+}
+
+
 local function toggle_gui(player)
     local should_show_oxygen_bar = not not maraxsis_constants.MARAXSIS_SURFACES[player.physical_surface.name]
 
@@ -119,7 +125,27 @@ local function toggle_gui(player)
     end
 
     get_gui(player).visible = should_show_oxygen_bar
-    if should_show_oxygen_bar then update_gui(player) end
+    if should_show_oxygen_bar then 
+        local has_abyssal_gear = false
+        local vehicle = player.physical_vehicle
+        if vehicle and maraxsis_constants.SUBMARINES[vehicle.name] then
+            if vehicle.energy > 0 or not vehicle.get_fuel_inventory().is_empty() then
+                has_abyssal_gear = true
+                goto continue
+            end
+        end
+        if player.character.grid then
+            for _, equipment in pairs(player.character.grid.equipment) do
+                if is_abyssal_diving_gear[equipment.name] and equipment.energy ~= 0 then
+                    has_abyssal_gear = true
+                    goto continue
+                end
+            end
+        end
+        ::continue::
+        update_gui(player,has_abyssal_gear) 
+
+        end
 end
 
 maraxsis.on_event(maraxsis.events.on_init(), function()
@@ -133,10 +159,6 @@ maraxsis.on_event(maraxsis.events.on_init(), function()
     end
 end)
 
-local is_abyssal_diving_gear = {
-    ["maraxsis-abyssal-diving-gear"] = true,
-    ["maraxsis-abyssal-diving-gear-disabled"] = true,
-}
 
 local function change_breath_amount_by(player, amount,has_abyssal_gear)
     local breath = storage.breath[player.index]
