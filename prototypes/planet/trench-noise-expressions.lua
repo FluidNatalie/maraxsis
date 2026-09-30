@@ -189,7 +189,7 @@ data.raw["simple-entity"]["maraxsis-lava-lamp"].autoplace = {
 
 data.raw["simple-entity"]["maraxsis-trench-wall-collisionless"].autoplace = {
     probability_expression = [[
-        maraxsis_3x3_grid * (maraxsis_trench_elevation < ]] .. (TRENCH_ENTRANCE_ELEVATION + 0.02) .. [[) * (maraxsis_trench_elevation >= 0.028)
+        maraxsis_3x3_grid * (min(maraxsis_primary_trench_elevation,maraxsis_secondary_trench_elevation) < ]] .. (TRENCH_ENTRANCE_ELEVATION + 0.02) .. [[) * (min(maraxsis_primary_trench_elevation,maraxsis_secondary_trench_elevation) >= 0.028)
     ]],
     order = "b[lava]-a[maraxsis]"
 }
