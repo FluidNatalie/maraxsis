@@ -159,7 +159,7 @@ maraxsis.on_nth_tick(UPDATE_RATE, function()
             if not surface.valid then goto continue_2 end
             local surface_index = surface.index
             if surface_index ~= player_surface_index then goto continue_2 end
-
+            local prototype = maraxsis_constants.PRESSURE_DOMES[pressure_dome_data.prototype]
             local regulator_fluidbox = pressure_dome_data.regulator_fluidbox
             if not regulator_fluidbox or not regulator_fluidbox.valid then goto continue_2 end
             local powered_and_has_fluid = (regulator_fluidbox.get_fluid_count("maraxsis-atmosphere") > 0) and regulator_fluidbox.is_crafting()
@@ -167,7 +167,7 @@ maraxsis.on_nth_tick(UPDATE_RATE, function()
 
             local dome_position = pressure_dome_data.position
             local x, y = position.x - dome_position.x, position.y - dome_position.y
-            if is_point_in_polygon(x, y) then
+            if is_point_in_polygon(x, y,prototype) then
                 change_breath_amount_by(player, BREATH_REGENERATION_FACTOR)
                 goto continue
             end
