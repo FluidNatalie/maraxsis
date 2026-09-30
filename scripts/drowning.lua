@@ -1,7 +1,10 @@
 local FULL_BREATH_NUM_TICKS = 10 * 60 * 60 -- ten minutes before you start drowning
 local TRENCH_LUNG_REDUCTION = 40 -- trench kills you 40x faster
+local DEEP_TRENCH_LUNG_REDUCTION = 100 -- Deep trench kills you 60x faster
+
 local BREATH_REGENERATION_FACTOR = 60 -- while in an air bubble, you regen air 60x faster than you would lose it
 local UPDATE_RATE = 20
+local TRENCH_MOVEMENT_FACTOR = maraxsis_constants.TRENCH_MOVEMENT_FACTOR
 
 local function stringify_oxygen_stats(player)
     local breath = storage.breath[player.index] or FULL_BREATH_NUM_TICKS
