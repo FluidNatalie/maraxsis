@@ -1,9 +1,11 @@
 local TRENCH_MOVEMENT_FACTOR = maraxsis_constants.TRENCH_MOVEMENT_FACTOR
 local TRENCH_ENTRANCE_ELEVATION = maraxsis_constants.TRENCH_ENTRANCE_ELEVATION
+local DEEP_TRENCH_CEILING_HEIGHT = maraxsis_constants.DEEP_TRENCH_CEILING_HEIGHT
+
 
 data:extend {{
     type = "noise-expression",
-    name = "maraxsis_trench_elevation",
+    name = "maraxsis_primary_trench_elevation",
     expression = [[
         maraxsis_elevation(x /]] .. TRENCH_MOVEMENT_FACTOR .. [[, y /]] .. TRENCH_MOVEMENT_FACTOR .. [[)
     ]]
@@ -11,10 +13,27 @@ data:extend {{
 
 data:extend {{
     type = "noise-expression",
+    name = "maraxsis_secondary_trench_elevation",
+    expression = [[
+        maraxsis_secondary_elevation(x /]] .. TRENCH_MOVEMENT_FACTOR .. [[, y /]] .. TRENCH_MOVEMENT_FACTOR .. [[)
+    ]]
+}}
+
+data:extend {{
+    type = "noise-expression",
+    name = "maraxsis_trench_elevation",
+    expression = [[ if(maraxsis_primary_trench_elevation > ]] .. TRENCH_ENTRANCE_ELEVATION .. [[,
+        maraxsis_secondary_trench_elevation,
+        maraxsis_primary_trench_elevation
+    )]]
+}}
+
+data:extend {{
+    type = "noise-expression",
     name = "maraxsis_trench_wall",
     expression = [[
-        maraxsis_trench_elevation < ]] .. TRENCH_ENTRANCE_ELEVATION .. [[
-    ]]
+       maraxsis_trench_elevation < ]] .. TRENCH_ENTRANCE_ELEVATION ..[[]]--.. [[)*(maraxsis_secondary_trench_elevation < ]] .. TRENCH_ENTRANCE_ELEVATION.. [[)
+    
 }}
 
 data:extend {{
