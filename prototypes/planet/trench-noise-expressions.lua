@@ -169,7 +169,7 @@ data:extend {{
     type = "noise-expression",
     name = "maraxsis_lava_biome",
     expression = [[
-        maraxsis_trench_wall * (maraxsis_lava_master_master > 0) * (maraxsis_primary_trench_elevation > ]] ..  TRENCH_ENTRANCE_ELEVATION .. [[)
+        maraxsis_trench_wall * (maraxsis_lava_master_master > 0)
     ]]
 }}
 
