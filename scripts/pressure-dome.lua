@@ -50,7 +50,7 @@ maraxsis.on_event(maraxsis.events.on_init(), function()
 end)
 
 -- By Pedro Gimeno, donated to the public domain
-local function is_point_in_polygon(x, y, dome_data)
+ function is_point_in_polygon(x, y, dome_data)
     local octagon_size = dome_data.octagon_size
     if x > octagon_size or x < -octagon_size or y > octagon_size or y < -octagon_size then
         return false
