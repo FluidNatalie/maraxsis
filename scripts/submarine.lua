@@ -187,8 +187,36 @@ maraxsis.register_delayed_function("post_sub_teleport_inventory_restoration", fu
     remove_hidden_toolbelt_equipment()
     transfer_inventory_back_to_submarine()
 end)
+
 local function teleport_submarine(submarine, target_position, target_surface)
     local grid = submarine.grid
+    for i = 1,32 do
+        local theta = i*(2/32)*math.pi
+        local x = target_position.x + 2*math.cos(theta)
+        local y = target_position.y + 2*math.sin(theta)
+        target_surface.create_trivial_smoke{
+            name = "maraxsis-bubbles",
+            position = {x=x,y=y}
+        }
+    end
+    for i = 1,48 do
+        local theta = i*(2/48)*math.pi
+        local x = target_position.x + 2.5*math.cos(theta)
+        local y = target_position.y + 2.5*math.sin(theta)
+        target_surface.create_trivial_smoke{
+            name = "maraxsis-bubbles",
+            position = {x=x,y=y}
+        }
+    end
+    for i = 1,64 do
+        local theta = i*(2/64)*math.pi
+        local x = target_position.x + 3*math.cos(theta)
+        local y = target_position.y + 3*math.sin(theta)
+        target_surface.create_trivial_smoke{
+            name = "maraxsis-bubbles",
+            position = {x=x,y=y}
+        }
+    end
     if not grid or grid.inventory_bonus == 0 then
         submarine.teleport(target_position, target_surface, true, false)
         return
