@@ -47,7 +47,7 @@ data:extend {{
         abs(multioctave_noise{
             x = maraxsis_wx(xx, yy),
             y = maraxsis_wy(xx, yy),
-            persistence = 0.25,
+            persistence = 0.15,
             seed0 = map_seed + 300,
             seed1 = 1,
             octaves = 2,
