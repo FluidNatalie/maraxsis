@@ -3,7 +3,7 @@ local TRENCH_ENTRANCE_ELEVATION = maraxsis_constants.TRENCH_ENTRANCE_ELEVATION
 data:extend {{
     type = "noise-expression",
     name = "maraxsis_starting_area",
-    expression = "1000"
+    expression = "500"
 }}
 
 data:extend {{
