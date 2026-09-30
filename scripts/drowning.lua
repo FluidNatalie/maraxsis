@@ -3,6 +3,9 @@ local TRENCH_LUNG_REDUCTION = 40 -- trench kills you 40x faster
 local DEEP_TRENCH_LUNG_REDUCTION = 100 -- Deep trench kills you 60x faster
 
 local BREATH_REGENERATION_FACTOR = 60 -- while in an air bubble, you regen air 60x faster than you would lose it
+local DIVING_GEAR_REGENERATION_FACTOR = 60
+
+
 local UPDATE_RATE = 20
 local TRENCH_MOVEMENT_FACTOR = maraxsis_constants.TRENCH_MOVEMENT_FACTOR
 
@@ -201,18 +204,21 @@ maraxsis.on_nth_tick(UPDATE_RATE, function()
                 if is_abyssal_diving_gear[equipment.name] and equipment.energy ~= 0 then
                     breath_change = breath_change + BREATH_REGENERATION_FACTOR * equipment.energy / equipment.max_energy
                     has_abyssal_gear = true
+                    break
                 end
             end
         end
-
-        local is_trench = not not maraxsis_constants.MARAXSIS_TRENCH_SURFACES[surface_name]
-        if is_trench then
-            local lung_reduction = get_trench_lung_reduction(character)
-            breath_change = breath_change - lung_reduction
-            --change_breath_amount_by(player, -lung_reduction)
-        else
-            breath_change = breath_change - 1
+        if not has_abyssal_gear then
+            local is_trench = not not maraxsis_constants.MARAXSIS_TRENCH_SURFACES[surface_name]
+            if is_trench then
+                local lung_reduction = get_trench_lung_reduction(character)
+                breath_change = breath_change - lung_reduction
+                --change_breath_amount_by(player, -lung_reduction)
+            else
+                breath_change = breath_change - 1
+            end
         end
+        
         
         
         if storage.breath[player.index] <= 0 then
