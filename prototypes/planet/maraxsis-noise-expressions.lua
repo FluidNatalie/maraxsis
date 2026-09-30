@@ -17,7 +17,7 @@ data:extend {{
     type = "noise-function",
     name = "maraxsis_elevation_bonus",
     expression = [[
-        (1 - distance_from_0_0(xx, yy) / maraxsis_starting_area)
+        0.25*(1 - distance_from_0_0(xx, yy) / maraxsis_starting_area)
     ]],
     parameters = {"xx", "yy"}
 }}
