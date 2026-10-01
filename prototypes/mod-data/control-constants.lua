@@ -25,6 +25,10 @@ local WYRM_BAIT_TRIGGER_MASK = "maraxsis-wyrm-bait"
 --- Effect name when the bait has been "ripened".
 local WYRM_BAIT_RIPENED_EFFECT_ID = "maraxsis-wyrm-bait-ripened"
 
+local WYRM_PATH_WIDTH = 44
+local WYRM_PATH_WOBBLE = 10
+local WYRM_PATH_WOBBLE_LENGTH = 120
+
 local TRENCH_SURFACE_NAME = "maraxsis-trench"
 local MARAXSIS_SURFACE_NAME = "maraxsis"
 
@@ -101,6 +105,9 @@ data:extend {{
         WYRM_MATRIARCH_TERRITORY_RADIUS = WYRM_MATRIARCH_TERRITORY_RADIUS,
         WYRM_BAIT_TRIGGER_MASK = WYRM_BAIT_TRIGGER_MASK,
         WYRM_BAIT_RIPENED_EFFECT_ID = WYRM_BAIT_RIPENED_EFFECT_ID,
+        WYRM_PATH_WIDTH = WYRM_PATH_WIDTH,
+        WYRM_PATH_WOBBLE = WYRM_PATH_WOBBLE,
+        WYRM_PATH_WOBBLE_LENGTH = WYRM_PATH_WOBBLE_LENGTH,
         TROPICAL_FISH_NAMES = TROPICAL_FISH_NAMES,
         SAND_ITEM_NAME = SAND_ITEM_NAME,
         NEEDS_DOME = {}, -- populated by prototypes/collision-mask.lua

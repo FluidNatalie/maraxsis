@@ -49,6 +49,21 @@ waterifiy("sand-1", {maraxsis_underwater_collision_mask})
 waterifiy("lowland-cream-red", {maraxsis_coral_collision_mask})
 waterifiy("lowland-red-vein-2", {maraxsis_coral_collision_mask})
 waterifiy("nuclear-ground", {maraxsis_underwater_collision_mask})
+
+--- Matriarch's path.
+local fertile = table.deepcopy(data.raw.tile["volcanic-folds-underwater"])
+fertile.name = "maraxsis-fertile-trench-floor"
+fertile.localised_name = {"tile-name.maraxsis-fertile-trench-floor"}
+fertile.autoplace = nil
+fertile.tint = {0.45, 1, 0.75}
+fertile.map_color = defines.color.mediumspringgreen
+fertile.hidden_in_factoriopedia = true
+fertile.factoriopedia_alternative = "volcanic-folds-underwater"
+--- The same counter waterifiy hands out from, so this tile can't land on another's layer.
+fertile.layer = math.min(layer, 255)
+layer = layer + 1
+data:extend {fertile}
+water_tile_type_names[#water_tile_type_names + 1] = fertile.name
 data.raw.tile["nuclear-ground-underwater"].localised_name = {"tile-name.nuclear-ground"}
 data.raw.tile["nuclear-ground-underwater"].hidden_in_factoriopedia = true
 data.raw.tile["nuclear-ground-underwater"].factoriopedia_alternative = "nuclear-ground"
