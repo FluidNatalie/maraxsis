@@ -18,7 +18,8 @@ function Public.generate_light(chunk_data,surface,position)
         surface = surface,
         target = {type = "position",position=position},
         scale = 40,
-        intensity = 0.005,
+        intensity = 0.01,
+        color = {r=0.8,g=0.8,b=1,a=1}
     }
 
 end
