@@ -142,6 +142,23 @@ local created_effect = {
     },
 }
 
+--- Placeholder.
+local function make_wake_effects(spread, cooldown)
+    local effects = {}
+    for _, smoke in pairs {"maraxsis-wyrm-wake-green", "maraxsis-wyrm-wake-blue"} do
+        effects[#effects + 1] = {
+            type = "create-trivial-smoke",
+            smoke_name = smoke,
+            offset_deviation = {{-spread, -spread}, {spread, spread}},
+            speed = {0, 0.02},
+            speed_multiplier = 1,
+            speed_multiplier_deviation = 1.2,
+            starting_frame_deviation = 5,
+        }
+    end
+    return {distance_cooldown = cooldown, effect = effects}
+end
+
 local function make_matriarch_head(
     base_name,
     order,
@@ -217,6 +234,8 @@ local function make_matriarch_head(
             },
         },
         render_layer = "elevated-rail-metal",
+        --- Fishling effect.
+        update_effects = {make_wake_effects(8, 4)},
         segment_engine = {
             segments = make_matriarch_segment_specifications(base_name, segment_scales, scale),
         },
@@ -247,6 +266,7 @@ local function make_matriarch_segment(base_name, scale, damage_multiplier, healt
                 matriarch_spritesheet("matriarch-body-glow", false, true, 0.5 * scale, 1.0),
             },
         },
+        update_effects = {make_wake_effects(4 * scale, 6 * scale)},
         backward_overlap = 4,
         forward_padding = -1 * scale,  -- tiles
         backward_padding = -4 * scale, -- tiles

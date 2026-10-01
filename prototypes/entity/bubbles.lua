@@ -31,6 +31,23 @@ swimming_bubbles.tint = {1, 1, 1, 0.15}
 swimming_bubbles.animation.scale = 0.2
 data:extend {swimming_bubbles}
 
+--- The bloom a wyrm matriarch leaves in the water behind her.
+for name, tint in pairs {
+    ["maraxsis-wyrm-wake-green"] = {0.45, 1, 0.7, 0.35},
+    ["maraxsis-wyrm-wake-blue"] = {0.4, 0.85, 1, 0.35},
+} do
+    local wake = table.deepcopy(bubbles)
+    wake.name = name
+    wake.tint = tint
+    wake.duration = 300
+    wake.fade_away_duration = 240
+    wake.start_scale = 0.6
+    wake.end_scale = 3.5
+    wake.show_when_smoke_off = false
+    wake.animation.scale = 0.5
+    data:extend {wake}
+end
+
 local nuclear_bubbles = table.deepcopy(bubbles)
 nuclear_bubbles.name = "maraxsis-nuclear-bubbles"
 nuclear_bubbles.animation.tint = {0.5, 1, 0.5}
