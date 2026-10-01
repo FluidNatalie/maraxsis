@@ -348,12 +348,35 @@ local function clean_array_of_invalid_luaobjects(array)
     return new_table
 end
 
+maraxsis.on_event(maraxsis.events.on_init(), function()
+    storage.players_on_maraxsis = {}
+    for i,player in pairs(game.players) do
+        if player.surface.name == "maraxsis" then
+            storage.players_on_maraxsis[i] = {player=player}
+        end
+    end
+    storage.players_on_maraxsis_trench = {}
+    for i,player in pairs(game.players) do
+        if player.surface.name == "maraxsis-trench" then
+            storage.players_on_maraxsis_trench[i] = {player=player}
+        end
+    end
+end)
+
 maraxsis.on_event(defines.events.on_player_changed_surface, function(event)
+    local player = game.get_player(event.player_index)
+    local cursor_stack = player.cursor_stack
+    storage.players_on_maraxsis[event.player_index] = nil
+    storage.players_on_maraxsis_trench[event.player_index] = nil
+    if player.surface.name == "maraxsis" then
+        storage.players_on_maraxsis[event.player_index] = {player = player}
+    elseif player.surface.name == "maraxsis-trench" then
+        storage.players_on_maraxsis_trench[event.player_index] = {player = player}
+    end
+
     local spidertrons = storage.previous_spidertron_remote_selection[event.player_index]
     if not spidertrons then return end
     spidertrons = clean_array_of_invalid_luaobjects(spidertrons)
-    local player = game.get_player(event.player_index)
-    local cursor_stack = player.cursor_stack
     if not cursor_stack or not cursor_stack.valid_for_read then return end
     if cursor_stack.type ~= "spidertron-remote" then return end
     player.spidertron_remote_selection = player.spidertron_remote_selection or spidertrons
