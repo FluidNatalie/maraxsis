@@ -201,9 +201,110 @@ data.raw.tile["volcanic-folds-underwater"].autoplace = {
     order = "e[tile]-a[maraxsis]"
 }
 
+data.raw.tile["maraxsis-fertile-trench-floor"].autoplace = {
+    --- Twice the others so the path wins wherever it runs, but never over lava.
+    probability_expression = [[
+        2 * maraxsis_trench_wall * maraxsis_wyrm_path * (1 - maraxsis_hot_lava)
+    ]],
+    order = "e[tile]-b[maraxsis]"
+}
 data.raw["simple-entity"]["maraxsis-chimney"].autoplace = {
     probability_expression = [[
         maraxsis_trench_wall * maraxsis_3x3_grid * (random_penalty{x = x, y = y, seed = map_seed, source = 1, amplitude = 1} > 0.995)
     ]],
     order = "f[entity]-a[chimney]"
+}
+
+-- Wyrm matriarch territories, the same as Vulcanus's demolisher territories
+data:extend {
+    {
+        type = "noise-expression",
+        name = "maraxsis_wyrm_matriarch_territory_radius",
+        expression = maraxsis_constants.WYRM_MATRIARCH_TERRITORY_RADIUS,
+    },
+    {
+        type = "noise-expression",
+        name = maraxsis_constants.WYRM_MATRIARCH_TERRITORY_EXPRESSION,
+        expression = [[
+            voronoi_cell_id{
+                x = x + 1000 * maraxsis_wyrm_matriarch_territory_radius,
+                y = y + 1000 * maraxsis_wyrm_matriarch_territory_radius,
+                seed0 = map_seed,
+                seed1 = 0,
+                grid_size = maraxsis_wyrm_matriarch_territory_radius,
+                distance_type = 'manhattan',
+                jitter = 1
+            } - maraxsis_wyrm_matriarch_starting_area
+        ]],
+    },
+    {
+        --- The territory a point belongs to. Comparing a point's territory with
+        --- its neighbours' is how we find the borders between them.
+        type = "noise-function",
+        name = "maraxsis_wyrm_territory_at",
+        expression = [[
+            voronoi_cell_id{
+                x = x + dx + 1000 * maraxsis_wyrm_matriarch_territory_radius,
+                y = y + dy + 1000 * maraxsis_wyrm_matriarch_territory_radius,
+                seed0 = map_seed,
+                seed1 = 0,
+                grid_size = maraxsis_wyrm_matriarch_territory_radius,
+                distance_type = 'manhattan',
+                jitter = 1
+            }
+        ]],
+        parameters = {"dx", "dy"},
+    },
+    {
+        --- 1 where any neighbour a given reach away sits in another territory.
+        type = "noise-function",
+        name = "maraxsis_wyrm_border_within",
+        expression = [[
+            min(1,
+                (maraxsis_wyrm_territory_at(reach, 0) != here) +
+                (maraxsis_wyrm_territory_at(-reach, 0) != here) +
+                (maraxsis_wyrm_territory_at(0, reach) != here) +
+                (maraxsis_wyrm_territory_at(0, -reach) != here) +
+                (maraxsis_wyrm_territory_at(reach, reach) != here) +
+                (maraxsis_wyrm_territory_at(reach, -reach) != here) +
+                (maraxsis_wyrm_territory_at(-reach, reach) != here) +
+                (maraxsis_wyrm_territory_at(-reach, -reach) != here)
+            )
+        ]],
+        local_expressions = {
+            here = "maraxsis_wyrm_territory_at(0, 0)",
+        },
+        parameters = {"reach"},
+    },
+    {
+        --- The paths the matriarchs keep to: a ring inset from the borders of their territory.
+        type = "noise-expression",
+        name = "maraxsis_wyrm_path",
+        expression = [[
+            maraxsis_wyrm_border_within(]] .. maraxsis_constants.WYRM_PATH_WIDTH .. [[ + wobble)
+        ]],
+        local_expressions = {
+            --- Makes the edge of the fertile zone be wavy instead of straight.
+            wobble = [[
+                ]] .. maraxsis_constants.WYRM_PATH_WOBBLE .. [[ * basis_noise{
+                    x = x,
+                    y = y,
+                    seed0 = map_seed,
+                    seed1 = 7734,
+                    input_scale = 1/]] .. maraxsis_constants.WYRM_PATH_WOBBLE_LENGTH .. [[,
+                    output_scale = 1
+                }
+            ]],
+        },
+    },
+    {
+        type = "noise-expression",
+        name = "maraxsis_wyrm_matriarch_starting_area",
+        expression = "distance < 7 * 32",
+    },
+    {
+        type = "noise-expression",
+        name = "maraxsis_wyrm_matriarch_variation_expression",
+        expression = "floor(clamp(distance / (18 * 32) - 0.25, 0, 4)) + (-99 * no_enemies_mode)", -- negative number means no matriarch
+    },
 }

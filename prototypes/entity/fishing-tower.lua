@@ -55,17 +55,21 @@ fishing_tower.minable = {mining_time = 0.5, result = "maraxsis-fishing-tower"}
 fishing_tower.icon = "__maraxsis__/graphics/icons/fishing-tower.png"
 fishing_tower.icon_size = 64
 fishing_tower.max_health = 500
-fishing_tower.surface_conditions = maraxsis.shallow_surface_conditions()
+fishing_tower.surface_conditions = nil
 fishing_tower.growth_grid_tile_size = 2
 fishing_tower.radius = 4
-fishing_tower.input_inventory_size = 2
-fishing_tower.output_inventory_size = 1
+fishing_tower.module_slots = 8
+fishing_tower.allowed_effects = {"speed", "productivity", "quality", "consumption"}
 scale_sprite_recursive(fishing_tower.graphics_set)
 scale_sprite_recursive(fishing_tower.crane.parts)
 fishing_tower.collision_box = {{-1.9, -1.9}, {1.9, 1.9}}
 fishing_tower.selection_box = {{-2, -2}, {2, 2}}
 fishing_tower.emissions_per_second = nil
-fishing_tower.accepted_seeds = {"maraxsis-fish-food"}
+--- Upstream keeps this at one on purpose. An agricultural tower only clears obstacles from
+--- its planting spots when it has room to bank what it mines, so a second slot turns the
+--- tower into a coral harvester.
+fishing_tower.output_inventory_size = 1
+fishing_tower.accepted_seeds = {"maraxsis-fish-food", "maraxsis-wyrm-confinement-cell"}
 fishing_tower.energy_source.emissions_per_minute = nil
 fishing_tower.radius_visualisation_picture = {
     filename = "__maraxsis__/graphics/entity/fishing-tower/radius-visualization.png",
@@ -94,7 +98,6 @@ data:extend {{
             [maraxsis_dome_collision_mask] = true,
             [maraxsis_underwater_collision_mask] = true,
             [maraxsis_lava_collision_mask] = true,
-            [maraxsis_trench_entrance_collision_mask] = true
         }
     },
     collision_box = {{-0.8, -0.8}, {0.8, 0.8}},
@@ -114,6 +117,13 @@ data:extend {{
         width = 1,
     },
     hidden = true,
+    --- This makes the tower show green preview squares when hovering over
+    --- coral, indicating we'll plant fish food there.
+    autoplace = {
+        tile_restriction = {"lowland-cream-red-underwater", "lowland-red-vein-2-underwater"},
+        probability_expression = "0",
+        richness_expression = "0",
+    },
     -- ambient_sounds todo
     created_effect = {
         type = "direct",
