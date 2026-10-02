@@ -198,7 +198,7 @@ maraxsis.on_nth_tick(UPDATE_RATE, function()
                 volume_modifier = 0.5,
                 override_sound_type = "weapon"
             }
-            character.damage(math.min(50, math.max(5, character.max_health * 0.05)),"neutral","drowning")
+            character.damage(math.min(100, math.max(10, character.max_health * 0.1)),"neutral","drowning")
         end
 
         ::continue::

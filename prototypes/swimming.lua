@@ -1,6 +1,15 @@
 local swimming_armors = {}
 local is_swimmable = {}
 
+for _,armor in pairs(data.raw.armor) do
+    if armor.provides_flight then
+        table.insert(armor.resistances,{
+            type = "drowning",
+            percent = 50,
+        })
+    end
+end
+
 for _, armor in pairs(data.raw.armor) do
     armor = table.deepcopy(armor)
     is_swimmable[armor.name] = true
