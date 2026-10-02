@@ -193,12 +193,7 @@ maraxsis.on_nth_tick(UPDATE_RATE, function()
         
 
         if storage.breath[player.index] <= 0 then
-            local true_damage = character.health - math.min(50, math.max(5, character.max_health * 0.05))
-            if true_damage <= 0 then
-                character.die("neutral")
-            else
-                character.health = true_damage
-            end
+            character.damage(math.min(50, math.max(5, character.max_health * 0.05)),"neutral","drowning")
         end
 
         ::continue::
