@@ -3,7 +3,7 @@ local TRENCH_ENTRANCE_ELEVATION = maraxsis_constants.TRENCH_ENTRANCE_ELEVATION
 data:extend {{
     type = "noise-expression",
     name = "maraxsis_starting_area",
-    expression = "1000"
+    expression = "500"
 }}
 
 data:extend {{
@@ -17,7 +17,7 @@ data:extend {{
     type = "noise-function",
     name = "maraxsis_elevation_bonus",
     expression = [[
-        (1 - distance_from_0_0(xx, yy) / maraxsis_starting_area)
+        0.25*(1 - distance_from_0_0(xx, yy) / maraxsis_starting_area)
     ]],
     parameters = {"xx", "yy"}
 }}
@@ -41,10 +41,32 @@ data:extend {{
 }}
 
 data:extend {{
+    type = "noise-function",
+    name = "maraxsis_trench_moisture",
+    expression = [[
+        abs(multioctave_noise{
+            x = maraxsis_wx(xx, yy),
+            y = maraxsis_wy(xx, yy),
+            persistence = 0.15,
+            seed0 = map_seed + 300,
+            seed1 = 1,
+            octaves = 2,
+            input_scale = 2/1300,
+            output_scale = 1
+        })
+    ]],
+    parameters = {"xx", "yy"}
+}}
+
+
+
+data:extend {{
     type = "noise-expression",
     name = "maraxsis_surface_moisture",
     expression = "maraxsis_moisture(x, y)"
 }}
+
+
 
 data:extend {{ -- distorted x. Also offset grid so that the starting area is in the middle of a cell
     type = "noise-function",
@@ -119,6 +141,21 @@ data:extend {{
                 maraxsis_moisture(xx, yy)
             )
         ]]
+    },
+    parameters = {"xxx", "yyy"}
+}}
+
+data:extend {{
+    type = "noise-function",
+    name = "maraxsis_secondary_elevation",
+    expression = [[
+        1 - (1 - min(1, elevation) + ]] .. TRENCH_ENTRANCE_ELEVATION .. [[) ^ 3 + elevation/3
+    ]],
+    local_expressions = {
+        xx = "xxx - 38",
+        yy = "yyy + 14",
+        elevation =  "maraxsis_trench_moisture(xx, yy)"
+        
     },
     parameters = {"xxx", "yyy"}
 }}

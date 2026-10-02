@@ -6,6 +6,7 @@
 
 local TRENCH_MOVEMENT_FACTOR = 1
 local TRENCH_ENTRANCE_ELEVATION = 0.08
+local DEEP_TRENCH_CEILING_HEIGHT = 0.08
 
 local SUBMARINES = {
     ["maraxsis-diesel-submarine"] = true,
@@ -114,6 +115,7 @@ data:extend {{
         WYRM_PATH_WIDTH = WYRM_PATH_WIDTH,
         WYRM_PATH_WOBBLE = WYRM_PATH_WOBBLE,
         WYRM_PATH_WOBBLE_LENGTH = WYRM_PATH_WOBBLE_LENGTH,
+        DEEP_TRENCH_CEILING_HEIGHT = DEEP_TRENCH_CEILING_HEIGHT,
         TROPICAL_FISH_NAMES = TROPICAL_FISH_NAMES,
         SAND_ITEM_NAME = SAND_ITEM_NAME,
         NEEDS_DOME = {}, -- populated by prototypes/collision-mask.lua

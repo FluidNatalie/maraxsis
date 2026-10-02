@@ -1,7 +1,25 @@
 local FULL_BREATH_NUM_TICKS = 10 * 60 * 60 -- ten minutes before you start drowning
 local TRENCH_LUNG_REDUCTION = 40 -- trench kills you 40x faster
+local DEEP_TRENCH_LUNG_REDUCTION = 100 -- Deep trench kills you 60x faster
+
 local BREATH_REGENERATION_FACTOR = 60 -- while in an air bubble, you regen air 60x faster than you would lose it
+local DIVING_GEAR_REGENERATION_FACTOR = 60
+
+
 local UPDATE_RATE = 20
+local TRENCH_MOVEMENT_FACTOR = maraxsis_constants.TRENCH_MOVEMENT_FACTOR
+
+local function get_trench_lung_reduction(character)
+    local elevation = character.surface.calculate_tile_properties({"maraxsis_primary_trench_elevation"},{character.position})["maraxsis_primary_trench_elevation"][1]
+    
+    --game.print(elevation)
+            if elevation < 0.1 then
+                return TRENCH_LUNG_REDUCTION
+            else
+                return DEEP_TRENCH_LUNG_REDUCTION
+            end
+
+end
 
 local function stringify_oxygen_stats(player)
     local breath = storage.breath[player.index] or FULL_BREATH_NUM_TICKS
@@ -10,7 +28,7 @@ local function stringify_oxygen_stats(player)
     local surface_name = player.physical_surface.name
     local is_trench = not not maraxsis_constants.MARAXSIS_TRENCH_SURFACES[surface_name]
     if is_trench then
-        time_left = time_left / TRENCH_LUNG_REDUCTION
+        time_left = time_left / get_trench_lung_reduction(player.character)
     end
     time_left = math.ceil(time_left)
 
@@ -26,7 +44,9 @@ local function stringify_oxygen_stats(player)
     return {"gui.oxygen-meter", minutes, seconds}
 end
 
-local function get_gui(player)
+
+
+local function get_gui(player, has_abyssal_gear)
     local screen = player.gui.screen
     if screen.oxygen_meter then return screen.oxygen_meter end
 
@@ -59,7 +79,7 @@ local function get_gui(player)
         type = "progressbar",
         value = 1,
         name = "oxygen",
-        caption = stringify_oxygen_stats(player),
+        caption = has_abyssal_gear and {"gui.oxygen-meter-infinity"} or stringify_oxygen_stats(player),
     }
     oxygen.style.bar_width = height
     oxygen.style.height = height
@@ -81,15 +101,21 @@ local function calc_color(bar_fill)
 end
 
 
-local function update_gui(player)
+local function update_gui(player,has_abyssal_gear)
     local breath = storage.breath[player.index] or FULL_BREATH_NUM_TICKS
     local bar_fill = breath / FULL_BREATH_NUM_TICKS
     get_gui(player).frame.oxygen.value = bar_fill
     
     get_gui(player).frame.oxygen.style.color = calc_color(bar_fill)
     
-    get_gui(player).frame.oxygen.caption = stringify_oxygen_stats(player)
+    get_gui(player).frame.oxygen.caption = has_abyssal_gear and {"gui.oxygen-meter-infinity"} or stringify_oxygen_stats(player)
 end
+
+local is_abyssal_diving_gear = {
+    ["maraxsis-abyssal-diving-gear"] = true,
+    ["maraxsis-abyssal-diving-gear-disabled"] = true,
+}
+
 
 local function toggle_gui(player)
     local should_show_oxygen_bar = not not maraxsis_constants.MARAXSIS_SURFACES[player.physical_surface.name]
@@ -99,7 +125,27 @@ local function toggle_gui(player)
     end
 
     get_gui(player).visible = should_show_oxygen_bar
-    if should_show_oxygen_bar then update_gui(player) end
+    if should_show_oxygen_bar then 
+        local has_abyssal_gear = false
+        local vehicle = player.physical_vehicle
+        if vehicle and maraxsis_constants.SUBMARINES[vehicle.name] then
+            if vehicle.energy > 0 or not vehicle.get_fuel_inventory().is_empty() then
+                has_abyssal_gear = true
+                goto continue
+            end
+        end
+        if player.character.grid then
+            for _, equipment in pairs(player.character.grid.equipment) do
+                if is_abyssal_diving_gear[equipment.name] and equipment.energy ~= 0 then
+                    has_abyssal_gear = true
+                    goto continue
+                end
+            end
+        end
+        ::continue::
+        update_gui(player,has_abyssal_gear) 
+
+        end
 end
 
 maraxsis.on_event(maraxsis.events.on_init(), function()
@@ -113,15 +159,11 @@ maraxsis.on_event(maraxsis.events.on_init(), function()
     end
 end)
 
-local is_abyssal_diving_gear = {
-    ["maraxsis-abyssal-diving-gear"] = true,
-    ["maraxsis-abyssal-diving-gear-disabled"] = true,
-}
 
-local function change_breath_amount_by(player, amount)
+local function change_breath_amount_by(player, amount,has_abyssal_gear)
     local breath = storage.breath[player.index]
     local delta = UPDATE_RATE * amount
-
+    
     local new_breath = (breath or FULL_BREATH_NUM_TICKS) + delta
     local new_breath = math.min(FULL_BREATH_NUM_TICKS, math.max(0, new_breath))
     
@@ -130,7 +172,7 @@ local function change_breath_amount_by(player, amount)
     end
 
     storage.breath[player.index] = new_breath
-    update_gui(player)
+    update_gui(player,has_abyssal_gear)
 end
 
 maraxsis.on_nth_tick(UPDATE_RATE, function()
@@ -145,11 +187,12 @@ maraxsis.on_nth_tick(UPDATE_RATE, function()
         if not maraxsis_constants.MARAXSIS_SURFACES[surface_name] then
             goto continue
         end
-
+        local breath_change = 0 -- Total amount to change breath by
         local vehicle = player.physical_vehicle
         if vehicle and maraxsis_constants.SUBMARINES[vehicle.name] then
             if vehicle.energy > 0 or not vehicle.get_fuel_inventory().is_empty() then
-                change_breath_amount_by(player, BREATH_REGENERATION_FACTOR)
+                breath_change = breath_change + BREATH_REGENERATION_FACTOR
+                change_breath_amount_by(player, breath_change,true)
                 goto continue
             end
         end
@@ -168,7 +211,8 @@ maraxsis.on_nth_tick(UPDATE_RATE, function()
             local dome_position = pressure_dome_data.position
             local x, y = position.x - dome_position.x, position.y - dome_position.y
             if is_point_in_polygon(x, y,prototype) then
-                change_breath_amount_by(player, BREATH_REGENERATION_FACTOR)
+                breath_change = breath_change + BREATH_REGENERATION_FACTOR
+                change_breath_amount_by(player, breath_change,true)
                 goto continue
             end
 
@@ -176,23 +220,30 @@ maraxsis.on_nth_tick(UPDATE_RATE, function()
         end
 
         local grid = character.grid
+        local has_abyssal_gear = false
         if grid then
             for _, equipment in pairs(grid.equipment) do
                 if is_abyssal_diving_gear[equipment.name] and equipment.energy ~= 0 then
-                    change_breath_amount_by(player, BREATH_REGENERATION_FACTOR * equipment.energy / equipment.max_energy)
+                    breath_change = breath_change + BREATH_REGENERATION_FACTOR * equipment.energy / equipment.max_energy
+                    has_abyssal_gear = true
+                    break
                 end
             end
         end
-
-        local is_trench = not not maraxsis_constants.MARAXSIS_TRENCH_SURFACES[surface_name]
-        if is_trench then
-            change_breath_amount_by(player, -TRENCH_LUNG_REDUCTION)
-        else
-            change_breath_amount_by(player, -1)
+        if not has_abyssal_gear then
+            local is_trench = not not maraxsis_constants.MARAXSIS_TRENCH_SURFACES[surface_name]
+            if is_trench then
+                local lung_reduction = get_trench_lung_reduction(character)
+                breath_change = breath_change - lung_reduction
+                --change_breath_amount_by(player, -lung_reduction)
+            else
+                breath_change = breath_change - 1
+            end
         end
         
-
-        if storage.breath[player.index] <= 0 then
+        
+        
+        if storage.breath[player.index] and storage.breath[player.index] <= 0 then
             local true_damage = character.health - math.min(50, math.max(5, character.max_health * 0.05))
             if true_damage <= 0 then
                 character.die("neutral")
@@ -200,8 +251,15 @@ maraxsis.on_nth_tick(UPDATE_RATE, function()
                 character.health = true_damage
             end
         end
-
+        if has_abyssal_gear and breath_change < 0 then
+            has_abyssal_gear = false
+        end
+        if breath_change ~= 0 then
+            change_breath_amount_by(player, breath_change,has_abyssal_gear)
+        end
         ::continue::
+        
+        
     end
 end)
 
