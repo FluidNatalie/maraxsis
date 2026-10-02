@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.39.14
+Date: 2026-10-02
+  Bugfixes:
+    - a fishing tower's planting squares are green where fish can grow
+    - coral trees no longer stop a fishing tower planting
+---------------------------------------------------------------------------------------------------
 Version: 1.39.13
 Date: 2026-09-30
   Graphics:
