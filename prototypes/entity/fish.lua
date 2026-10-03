@@ -26,7 +26,15 @@ for _, color in pairs(map_colors) do
     color.b = color.b / sum * color_budget
     color.a = 255
 end
-
+for _,fish in pairs(data.raw.fish) do
+    fish.resistances = fish.resistances or {}
+    table.insert(fish.resistances, 
+        {
+                type = "drowning",
+                percent = 100,
+        }
+    )
+end
 for i, v in pairs(fish) do
     local name = "maraxsis-tropical-fish-" .. i
 
@@ -90,6 +98,12 @@ for i, v in pairs(fish) do
                 }
             },
             animation = v,
+        },
+        resistances = {
+            {
+                type = "drowning",
+                percent = 100,
+            },
         },
         water_reflection = data.raw.fish["fish"].water_reflection,
         absorbtions_to_join_attack = {},
