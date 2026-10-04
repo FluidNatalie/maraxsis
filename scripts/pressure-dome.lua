@@ -708,8 +708,8 @@ end
 
 maraxsis.on_event(maraxsis.events.on_built(), function(event)
     local entity = event.entity
-    local prototype_name = entity.name
     if not entity.valid or not domes[entity.name] then return end
+    local prototype_name = entity.name
     local dome_prototype = domes[entity.name]
     local player = event.player_index and game.get_player(event.player_index)
 
