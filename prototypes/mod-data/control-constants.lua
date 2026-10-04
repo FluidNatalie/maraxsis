@@ -67,17 +67,7 @@ for i = 1, 15 do
 end
 
 local PRESSURE_DOMES = {
-    ["maraxsis-pressure-dome"] = {
-        octagon_size = 16.5,
-        PRESSURE_DOME_TILE = "maraxsis-pressure-dome-tile",
-        regulator = "maraxsis-regulator",
-        pressure_dome = "maraxsis-pressure-dome",
-        dome_collider = "maraxsis-pressure-dome-collision",
-        regulator_fluidbox_prefix = "maraxsis-regulator-fluidbox-",
-        sprite = "maraxsis-pressure-dome-sprite",
-        lamp = "maraxsis-pressure-dome-lamp",
-        combinator = "maraxsis-pressure-dome-combinator",
-    },
+    
 }
 
 data:extend {{

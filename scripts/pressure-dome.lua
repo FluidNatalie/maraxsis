@@ -21,14 +21,14 @@ local MARAXSIS_DOME_COLLIDERS = {
 for _,dome_data in pairs(domes) do
     dome_data.check_size = dome_data.octagon_size - 0.01
     dome_data.DOME_POLYGON = {
-        7, dome_data.check_size,
-        -7, dome_data.check_size,
-        -dome_data.check_size, 7,
-        -dome_data.check_size, -7,
-        -7, -dome_data.check_size,
-        7, -dome_data.check_size,
-        dome_data.check_size, -7,
-        dome_data.check_size, 7,
+        dome_data.corner_size, dome_data.check_size,
+        -dome_data.corner_size, dome_data.check_size,
+        -dome_data.check_size, dome_data.corner_size,
+        -dome_data.check_size, -dome_data.corner_size,
+        -dome_data.corner_size, -dome_data.check_size,
+        dome_data.corner_size, -dome_data.check_size,
+        dome_data.check_size, -dome_data.corner_size,
+        dome_data.check_size, dome_data.corner_size,
     
     }
     rro.soft_insert(PRESSURE_DOME_TILES,dome_data.PRESSURE_DOME_TILE)
@@ -500,7 +500,7 @@ local function place_collision_boxes(pressure_dome_data, health, player)
     local force = pressure_dome_data.force_index
     local quality = pressure_dome_data.quality
 
-    local diagonal_offset = 4.75
+    local diagonal_offset = pressure_dome_prototype.diagonal_offset
     local size = octagon_size
     local positions_and_orientations = {
         {x,                            y - size,                     defines.direction.north},

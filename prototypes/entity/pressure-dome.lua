@@ -1,5 +1,21 @@
 local table = require("lib.table")
 
+maraxsis_constants.PRESSURE_DOMES["maraxsis-pressure-dome"] = {
+        octagon_size = 16.5,
+        corner_size = 7,
+        diagonal_offset = 4.75,
+        PRESSURE_DOME_TILE = "maraxsis-pressure-dome-tile",
+        regulator = "maraxsis-regulator",
+        pressure_dome = "maraxsis-pressure-dome",
+        dome_collider = "maraxsis-pressure-dome-collision",
+        regulator_fluidbox_prefix = "maraxsis-regulator-fluidbox-",
+        sprite = "maraxsis-pressure-dome-sprite",
+        lamp = "maraxsis-pressure-dome-lamp",
+        combinator = "maraxsis-pressure-dome-combinator",
+        recipe = "maraxsis-pressure-dome",
+    }
+local base_dome_params = maraxsis_constants.PRESSURE_DOMES["maraxsis-pressure-dome"]
+
 local dome = {
     filename = "__maraxsis__/graphics/entity/pressure-dome/pressure-dome.png",
     width = 1344,
@@ -13,7 +29,7 @@ local light_2 = {
     filename = "__core__/graphics/light-medium.png",
     width = 300,
     height = 300,
-    scale = 7,
+    scale = base_dome_params.corner_size,
     shift = {0, 0.3},
     draw_as_light = true,
 }
@@ -89,7 +105,7 @@ data:extend {{
     max_health = 10000,
     collision_box = collision_box(),
     minable = {mining_time = 1, result = "maraxsis-pressure-dome"},
-    selection_box = {{-16.5, -16.5}, {16.5, 16.5}},
+    selection_box = {{-base_dome_params.octagon_size, -base_dome_params.octagon_size}, {base_dome_params.octagon_size, base_dome_params.octagon_size}},
     drawing_box = collision_box(),
     collision_mask = {colliding_with_tiles_only = true, layers = {["empty_space"] = true}},
     render_layer = "higher-object-above",
@@ -270,8 +286,8 @@ data:extend {{
     hidden = true,
     flags = {"placeable-player", "player-creation", "placeable-off-grid", "not-on-map", "building-direction-8-way", "not-blueprintable"},
     max_health = 10000,
-    collision_box = {{-7, -0.3}, {7, 0.3}},
-    selection_box = {{-7, -0.5}, {7, 0.5}},
+    collision_box = {{-base_dome_params.corner_size, -0.3}, {base_dome_params.corner_size, 0.3}},
+    selection_box = {{-base_dome_params.corner_size, -0.5}, {base_dome_params.corner_size, 0.5}},
     drawing_box = {{0, 0}, {0, 0}},
     collision_mask = {layers = {
         ["water_tile"] = true,
@@ -305,3 +321,57 @@ data:extend {{
     shift = {0, 0},
     flags = {"no-crop", "no-scale", "icon"},
 }}
+
+
+
+local new_dome_params = {
+    ["maraxsis-pressure-dome-small"] = {
+        octagon_size = 8.5,
+        --corner_size = 4,
+        dome_collider = "maraxsis-pressure-dome-collision-small",
+        diagonal_offset = 2.75,
+    },
+    ["maraxsis-pressure-dome-large"] = {
+        octagon_size = 24.5,
+        --corner_size = 10,
+        dome_collider = "maraxsis-pressure-dome-collision-large",
+        diagonal_offset = 6.75,
+    }
+}    
+
+for dome,params in pairs(new_dome_params) do
+    params.corner_size = math.floor(((params.octagon_size-0.5)/16)*7)
+
+    local constants = table.deepcopy(maraxsis_constants.PRESSURE_DOMES["maraxsis-pressure-dome"])
+
+    maraxsis_constants.PRESSURE_DOMES[dome] = constants
+
+    
+
+    local item = table.deepcopy(data.raw.item["maraxsis-pressure-dome"])
+    local roboport = table.deepcopy(data.raw.roboport["maraxsis-pressure-dome"])
+    local recipe = table.deepcopy(data.raw.recipe["maraxsis-pressure-dome"])
+    local collider = table.deepcopy(data.raw["simple-entity-with-owner"]["maraxsis-pressure-dome-collision"])
+
+    item.place_result = dome
+    roboport.minable.result = dome
+    item.name = dome
+    roboport.name = dome
+    recipe.name = dome
+    recipe.results[1].name = dome
+    collider.name = params.dome_collider
+    collider.selection_box = {{-params.corner_size, -0.3}, {params.corner_size, 0.3}}
+    collider.collision_box_box = {{-params.corner_size, -0.3}, {params.corner_size, 0.3}}
+    roboport.selection_box = {{-params.octagon_size, -params.octagon_size}, {params.octagon_size, params.octagon_size}}
+    
+
+    data:extend{item,roboport,recipe,collider}
+    
+    constants.octagon_size = params.octagon_size
+    constants.corner_size = params.corner_size
+    constants.pressure_dome = dome
+    constants.recipe = dome
+    constants.dome_collider = params.dome_collider
+    constants.diagonal_offset = params.diagonal_offset
+    maraxsis_constants.PRESSURE_DOMES[dome] = constants
+end

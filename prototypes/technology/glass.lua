@@ -12,10 +12,10 @@ data:extend {{
             type = "unlock-recipe",
             recipe = "maraxsis-glass-panes",
         },
-        {
-            type = "unlock-recipe",
-            recipe = "maraxsis-pressure-dome",
-        },
+        -- {
+        --     type = "unlock-recipe",
+        --     recipe = "maraxsis-pressure-dome",
+        -- },
         {
             type = "unlock-recipe",
             recipe = "maraxsis-atmosphere",
@@ -32,6 +32,18 @@ data:extend {{
     },
     order = "eb[glassworking]",
 }}
+
+for _,dome in pairs(maraxsis_constants.PRESSURE_DOMES) do
+    table.insert(data.raw.technology["maraxsis-glassworking"].effects,
+    {
+        type = "unlock-recipe",
+        recipe = dome.recipe
+    }
+)
+
+end
+
+--table.insert(data.raw.technology["maraxsis-glassworking"].effects, {effect = "unlock-recipe", recipe = recipe.name})
 
 local limestone_variants = {}
 for i = 1, 3 do
