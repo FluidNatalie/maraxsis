@@ -191,7 +191,10 @@ maraxsis.on_nth_tick(UPDATE_RATE, function()
             change_breath_amount_by(player, -1)
         end
         
-
+        if breath_change ~= 0 then
+            change_breath_amount_by(player, breath_change,has_abyssal_gear)
+        end
+        
         if storage.breath[player.index] <= 0 then
             player.play_sound{
                 path = "maraxsis-submerge",
@@ -200,7 +203,10 @@ maraxsis.on_nth_tick(UPDATE_RATE, function()
             }
             character.damage(math.min(100, math.max(10, character.max_health * 0.1)),"neutral","drowning")
         end
-
+        if has_abyssal_gear and breath_change < 0 then
+            has_abyssal_gear = false
+        end
+        
         ::continue::
     end
 end)
