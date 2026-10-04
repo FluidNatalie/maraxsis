@@ -330,12 +330,14 @@ local new_dome_params = {
         --corner_size = 4,
         dome_collider = "maraxsis-pressure-dome-collision-small",
         diagonal_offset = 2.75,
+        sprite = "maraxsis-pressure-dome-sprite-small"
     },
     ["maraxsis-pressure-dome-large"] = {
         octagon_size = 24.5,
         --corner_size = 10,
         dome_collider = "maraxsis-pressure-dome-collision-large",
         diagonal_offset = 6.75,
+        sprite = "maraxsis-pressure-dome-sprite-large"
     }
 }    
 
@@ -364,7 +366,46 @@ for dome,params in pairs(new_dome_params) do
     collider.collision_box_box = {{-params.corner_size, -0.3}, {params.corner_size, 0.3}}
     roboport.selection_box = {{-params.octagon_size, -params.octagon_size}, {params.octagon_size, params.octagon_size}}
     
+    local cage_shadow = {
+    filename = "__maraxsis__/graphics/entity/pressure-dome/cage-shadow.png",
+    width = 1344,
+    height = 1344,
+    scale = 0.935*(params.octagon_size-0.5)/16,
+    shift = {0, -1.25},
+    flags = {"no-scale"},
+}
+    local base_shadow = {
+    filename = "__maraxsis__/graphics/entity/pressure-dome/base-shadow.png",
+    width = 1344,
+    height = 1344,
+    scale = 0.935*(params.octagon_size-0.5)/16,
+    shift = {0, -1.25},
+    flags = {"no-scale"},
+    draw_as_shadow = true,
+}
+    local dome_sprite = {
+        filename = "__maraxsis__/graphics/entity/pressure-dome/pressure-dome.png",
+        width = 1344,
+        height = 1344,
+        scale = 0.935*(params.octagon_size-0.5)/16,
+        shift = {0, -1.25},
+        flags = {"no-scale"},
+    }
 
+    roboport.base = {
+        layers = table.array_combine({
+            cage_shadow,
+            base_shadow,
+            dome_sprite,
+        }, table.deepcopy(data.raw.roboport["maraxsis-regulator"].integration_patch.layers))
+    }
+
+        data:extend {{
+        type = "sprite",
+        name = params.sprite,
+        layers = {cage_shadow, base_shadow, dome_sprite},
+    }}
+    
     data:extend{item,roboport,recipe,collider}
     
     constants.octagon_size = params.octagon_size
@@ -373,5 +414,6 @@ for dome,params in pairs(new_dome_params) do
     constants.recipe = dome
     constants.dome_collider = params.dome_collider
     constants.diagonal_offset = params.diagonal_offset
+    constants.sprite = params.sprite
     maraxsis_constants.PRESSURE_DOMES[dome] = constants
 end
