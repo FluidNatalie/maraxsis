@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.39.17
+Date: 2026-10-05
+  Bugfixes:
+    - Fixed crash on placing pressure domes via blueprints. https://github.com/FluidNatalie/maraxsis/issues/27
+  Graphics:
+    - Dome sprites are now split between a base sprite and a cage sprite. The cage sprite can be disabled with "Hide Tall Entities," and when hovering on a dome, only the cage sprite is hidden. Thank you KaueNP for the new sprites!
+---------------------------------------------------------------------------------------------------
 Version: 1.39.16
 Date: 2026-10-05
   Bugfixes:
