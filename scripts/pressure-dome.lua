@@ -1095,13 +1095,19 @@ maraxsis.on_event(maraxsis.events.on_built(), function(event)
 
     local name = is_ghost and entity.ghost_name or entity.name
     if not rro.contains(MARAXSIS_REGULATORS,name) then return end
-
-    local dome_prototype = domes[name]
+    local dome_prototype
+    for _,prototype in pairs(domes) do
+        if prototype.regulator == name then
+            dome_prototype = prototype
+            break
+        end
+    end
     if not dome_prototype then
         error(name.. "\n"..serpent.block(domes))
     end
     local quality = entity.quality
     local position = entity.position
+    local name = dome_prototype.pressure_dome
     local surface = entity.surface
     local force_index = entity.force_index
     local tags = entity.tags
