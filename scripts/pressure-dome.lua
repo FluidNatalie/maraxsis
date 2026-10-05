@@ -678,6 +678,7 @@ end)
 --- https://github.com/notnotmelon/maraxsis/issues/174
 function maraxsis.rerender_all_domes()
     local sorted_by_y_position = {}
+    if not storage.pressure_domes then return end
     for _, pressure_dome_data in pairs(storage.pressure_domes) do
         table.insert(sorted_by_y_position, pressure_dome_data)
     end
