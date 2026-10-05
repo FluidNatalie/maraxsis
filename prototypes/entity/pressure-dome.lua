@@ -446,3 +446,9 @@ for dome,params in pairs(new_dome_params) do
     constants.base_sprite = params.base_sprite
     maraxsis_constants.PRESSURE_DOMES[dome] = constants
 end
+
+for key,dome_data in pairs(maraxsis_constants.PRESSURE_DOMES) do
+    dome_data.octagon_diameter = (dome_data.octagon_size - 0.5) * 2
+    local dome = data.raw["roboport"][dome_data.pressure_dome]
+    dome.custom_tooltips = dome.custom_tooltips or {}
+end
