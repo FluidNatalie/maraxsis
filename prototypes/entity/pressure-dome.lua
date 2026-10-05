@@ -342,22 +342,14 @@ data:extend {{
 
 
 local new_dome_params = {
-    -- ["maraxsis-pressure-dome-small"] = {
-    --     octagon_size = 8.5,
-    --     --corner_size = 4,
-    --     dome_collider = "maraxsis-pressure-dome-collision-small",
-    --     diagonal_offset = 2.75,
-    --     sprite = "maraxsis-pressure-dome-sprite-small",
-    --     base_sprite = "maraxsis-pressure-dome-sprite-small",
-    -- },
-    ["maraxsis-pressure-dome-large"] = {
-        octagon_size = 24.5,
-        --corner_size = 10,
-        dome_collider = "maraxsis-pressure-dome-collision-large",
-        diagonal_offset = 7.25,
-        sprite = "maraxsis-pressure-dome-sprite-large",
-        base_sprite = "maraxsis-pressure-dome-base-sprite-large",
-    }
+    -- ["maraxsis-pressure-dome-large"] = {
+    --     octagon_size = 24.5,
+    --     --corner_size = 10,
+    --     dome_collider = "maraxsis-pressure-dome-collision-large",
+    --     diagonal_offset = 7.25,
+    --     sprite = "maraxsis-pressure-dome-sprite-large",
+    --     base_sprite = "maraxsis-pressure-dome-base-sprite-large",
+    -- }
 }    
 
 for dome,params in pairs(new_dome_params) do
