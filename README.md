@@ -100,7 +100,7 @@ Maraxsis would not be possible without the help of these amazing, fantastic, inc
  - Tropical Fish Pack - [ZivixLLC](https://github.com/ZivixLLC)
  - Hydro Plant, Regulator, Geothermal Generator, & Conduit Graphics - [Hurricane](https://mods.factorio.com/user/Hurricane046)
  - Submarine & Nuclear Submarine - [keptin](https://www.turbosquid.com/Search/Artists/keptin)
- - Pressure Dome - [KaueNP](https://github.com/KaueNP)
+ - Pressure Dome Graphics - [KaueNP](https://github.com/KaueNP)
  - Sonar - [fishbus](https://github.com/fishbus)
  - Coral Reef - [Galdoc](https://github.com/Galdoc)
  - Devops & CI - [fgardt](https://github.com/fgardt)
