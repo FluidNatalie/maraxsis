@@ -676,7 +676,7 @@ end)
 --- sorts all domes by y position and re-draws.
 --- this prevents Z-fighting.
 --- https://github.com/notnotmelon/maraxsis/issues/174
-local function rerender_all_domes()
+function maraxsis.rerender_all_domes()
     local sorted_by_y_position = {}
     for _, pressure_dome_data in pairs(storage.pressure_domes) do
         table.insert(sorted_by_y_position, pressure_dome_data)
@@ -689,8 +689,13 @@ local function rerender_all_domes()
     for _, pressure_dome_data in pairs(sorted_by_y_position) do
         local surface = pressure_dome_data.surface
         if surface.valid then
-            pressure_dome_data.entity.destroy()
-            pressure_dome_data.entity_base.destroy()
+            if pressure_dome_data.entity then
+                pressure_dome_data.entity.destroy()
+            end
+            if pressure_dome_data.entity_base then
+                pressure_dome_data.entity_base.destroy()
+            end
+            
             local prototype = domes[pressure_dome_data.prototype]
             pressure_dome_data.opacity = pressure_dome_data.opacity or 255
             local opacity = pressure_dome_data.opacity
@@ -814,7 +819,12 @@ maraxsis.on_event(maraxsis.events.on_built(), function(event)
     end
 
     storage.pressure_domes[entity.id] = pressure_dome_data
-    rerender_all_domes()
+    maraxsis.rerender_all_domes()
+end)
+
+maraxsis.on_event(maraxsis.events.on_init(), function()
+    maraxsis.rerender_all_domes()
+
 end)
 
 local function delete_invalid_entities_from_contained_entities_list(pressure_dome_data, additional_entity_to_delete)
