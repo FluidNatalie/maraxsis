@@ -20,3 +20,4 @@ README.md export-ignore
 *.sh export-ignore
 *.py export-ignore
 *.aup3 export-ignore
+*.xcf export-ignore
