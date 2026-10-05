@@ -1,4 +1,9 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.39.16
+Date: 2026-10-05
+  Bugfixes:
+    - Fixed crash on placing pressure domes via blueprints. https://github.com/FluidNatalie/maraxsis/issues/27
+---------------------------------------------------------------------------------------------------
 Version: 1.39.15
 Date: 2026-10-02
   Balancing:
