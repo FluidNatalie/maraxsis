@@ -92,8 +92,9 @@ order_subgroup("lamp", "maraxsis-sonar-light-2", "d[radar]-b[sonar]-c[sonar-ligh
 order_subgroup("item", "maraxsis-geothermal-generator", "h[geothermal-generator]-a[geothermal-generator]", "energy")
 order_subgroup("item", "maraxsis-oversized-steam-turbine", "h[geothermal-generator]-b[oversized-steam-turbine]", "energy")
 order_subgroup("item", "maraxsis-pressure-dome", "z-d-a[pressure-dome]", "environmental-protection")
-order_subgroup("lamp", "maraxsis-pressure-dome-lamp", "z-d-b[pressure-dome-lamp]", "environmental-protection")
-order_subgroup("constant-combinator", "maraxsis-pressure-dome-combinator", "z-d-c[pressure-dome-lamp]", "environmental-protection")
+order_subgroup("item", "maraxsis-pressure-dome-large", "z-d-b[pressure-dome-big]", "environmental-protection")
+order_subgroup("lamp", "maraxsis-pressure-dome-lamp", "z-d-c[pressure-dome-lamp]", "environmental-protection")
+order_subgroup("constant-combinator", "maraxsis-pressure-dome-combinator", "z-d-d[pressure-dome-lamp]", "environmental-protection")
 order_subgroup("simple-entity", "maraxsis-water-shader", "z", "grass")
 
 order_subgroup("fluid", "maraxsis-saline-water", "f[maraxsis-fluids]-a[saline-water]", "fluid")

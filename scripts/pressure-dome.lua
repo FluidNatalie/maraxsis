@@ -1,5 +1,7 @@
 local rro = require("__PlanetsLib__.lib.remove-replace-object")
 
+local base_render_layer = "lower-object-above-shadow"
+
 local domes = maraxsis_constants.PRESSURE_DOMES
 
 local PRESSURE_DOME_TILES = {
@@ -688,6 +690,7 @@ local function rerender_all_domes()
         local surface = pressure_dome_data.surface
         if surface.valid then
             pressure_dome_data.entity.destroy()
+            pressure_dome_data.entity_base.destroy()
             local prototype = domes[pressure_dome_data.prototype]
             pressure_dome_data.opacity = pressure_dome_data.opacity or 255
             local opacity = pressure_dome_data.opacity
@@ -696,9 +699,17 @@ local function rerender_all_domes()
                 render_layer = "higher-object-above",
                 target = pressure_dome_data.position,
                 surface = pressure_dome_data.surface,
+                tall = true,
+            }
+            local entity_base = rendering.draw_sprite {
+                sprite = prototype.base_sprite,
+                render_layer = base_render_layer,
+                target = pressure_dome_data.position,
+                surface = pressure_dome_data.surface,
             }
             entity.color = {opacity, opacity, opacity, opacity}
             pressure_dome_data.entity = entity
+            pressure_dome_data.entity_base = entity_base
             storage.pressure_domes[entity.id] = pressure_dome_data
         elseif pressure_dome_data.entity.valid then
             storage.pressure_domes[pressure_dome_data.entity.id] = nil
@@ -771,10 +782,18 @@ maraxsis.on_event(maraxsis.events.on_built(), function(event)
         render_layer = "higher-object-above",
         target = position,
         surface = surface,
+        tall = true,
+    }
+    local entity_base = rendering.draw_sprite {
+        sprite = dome_prototype.base_sprite,
+        render_layer = base_render_layer,
+        target = position,
+        surface = surface,
     }
 
     local pressure_dome_data = {
         entity = entity,
+        entity_base = entity_base,
         position = position,
         surface = surface,
         quality = quality,
@@ -962,6 +981,7 @@ maraxsis.on_event(maraxsis.events.on_destroyed(), function(event)
             on_dome_died(event, pressure_dome_data)
         end
         entity.destroy()
+        pressure_dome_data.entity_base.destroy()
         return
     end
 
