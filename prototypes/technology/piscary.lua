@@ -165,6 +165,7 @@ data:extend {{
     allow_productivity = false,
     allow_quality = false,
     auto_recycle = false,
+    can_set_quality = true,
     main_product = "maraxsis-fish-food",
     icon = "__maraxsis__/graphics/icons/shrinkflation.png"
 }}
