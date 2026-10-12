@@ -162,6 +162,7 @@ end)
 
 local function change_breath_amount_by(player, amount,has_abyssal_gear)
     local breath = storage.breath[player.index]
+    if not amount then return end
     local delta = UPDATE_RATE * amount
     if not amount then return end
     
