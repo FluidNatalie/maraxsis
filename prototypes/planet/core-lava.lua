@@ -5,6 +5,19 @@ local resource_autoplace = require "resource-autoplace"
 --- from the surface lava rivers.
 local core_lava_fluid = table.deepcopy(data.raw.fluid["lava"])
 core_lava_fluid.name = "core-lava"
+--- Core lava is a darker, redder relative of lava. Both the icon and the pipe
+--- colour have their green and blue channels shifted down by 15/255.
+local darken = 75 / 255
+core_lava_fluid.icons = {
+    {icon = core_lava_fluid.icon, tint = {1, 1 - darken, 1 - darken, 1}},
+}
+core_lava_fluid.icon = nil
+core_lava_fluid.base_color = {
+    core_lava_fluid.base_color[1] ,
+    math.max(core_lava_fluid.base_color[2] - darken,0),
+    math.max(core_lava_fluid.base_color[3] - darken,0),
+}
+core_lava_fluid.order = core_lava_fluid.order .. "a"
 data:extend {core_lava_fluid}
 
 data:extend {{
