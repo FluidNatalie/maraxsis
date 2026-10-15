@@ -24,6 +24,7 @@ require "prototypes.entity.sand-extractor"
 require "prototypes.entity.conduit"
 require "prototypes.entity.oversized-steam-turbine"
 require "prototypes.entity.geothermal-generator"
+require "prototypes.entity.big-pumpjack"
 
 require "prototypes.technology.abyssal-diving-gear"
 require "prototypes.technology.technology"

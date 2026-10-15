@@ -58,8 +58,16 @@ core_lava_autoplace.default_enabled = false
 --- 
 --core_lava_autoplace.probability_expression = "(" .. core_lava_autoplace.probability_expression .. ") * maraxsis_subtrench"
 
+--- Core lava lives in its own resource category so that only the big pumpjack,
+--- which opts into this category, is able to extract it.
+data:extend {{
+    type = "resource-category",
+    name = "maraxsis-core-lava",
+}}
+
 local core_lava_resource = table.deepcopy(data.raw.resource["crude-oil"])
 core_lava_resource.name = "core-lava"
+core_lava_resource.category = "maraxsis-core-lava"
 core_lava_resource.minable.results = {
     {type = "fluid", name = "core-lava", amount = 10},
 }
