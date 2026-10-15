@@ -24,10 +24,10 @@ local core_lava_autoplace = resource_autoplace.resource_autoplace_settings {
     name = "core-lava",
     order = "c", -- Other resources are "b"; oil won't get placed if something else is already there.
     base_density = 8.2,
-    base_spots_per_km2 = 1.8,
+    base_spots_per_km2 = 60,
     random_probability = 1 / 48,
-    random_spot_size_minimum = 1,
-    random_spot_size_maximum = 1, -- don't randomize spot size
+    random_spot_size_minimum = 4,
+    random_spot_size_maximum = 8, -- don't randomize spot size
     additional_richness = 220000, -- this increases the total everywhere, so base_density needs to be decreased to compensate
     has_starting_area_placement = false,
     regular_rq_factor_multiplier = 1,
@@ -38,7 +38,12 @@ core_lava_autoplace.control = "core-lava"
 --- generate there.
 core_lava_autoplace.default_enabled = false
 --- Restrict generation to the subtrenches of the trench surface.
-core_lava_autoplace.probability_expression = "(" .. core_lava_autoplace.probability_expression .. ") * maraxsis_subtrench"
+--- The mask is binary, so it removes veins that fall outside the subtrenches
+--- without diluting the vein density inside them. The vanilla crude-oil
+--- frequency therefore already gives oil-like patch density in the subtrenches
+--- after masking; no frequency compensation is needed.
+--- 
+--core_lava_autoplace.probability_expression = "(" .. core_lava_autoplace.probability_expression .. ") * maraxsis_subtrench"
 
 local core_lava_resource = table.deepcopy(data.raw.resource["crude-oil"])
 core_lava_resource.name = "core-lava"

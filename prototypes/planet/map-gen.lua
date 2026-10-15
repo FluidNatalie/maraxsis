@@ -223,6 +223,7 @@ planet_map_gen["maraxsis-trench"] = function()
             },
             ["entity"] = {
                 settings = {
+                    ["core-lava"] = {},
                     ["maraxsis-lava-lamp"] = {},
                     ["maraxsis-trench-wall-collisionless"] = {},
                     ["vulcanus-chimney-short"] = {},
