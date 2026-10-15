@@ -1,4 +1,19 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.39.22
+Date: 2026-10-15
+  Bugfixes:
+    - K2SO: Fixed singularity research data recipe.
+---------------------------------------------------------------------------------------------------
+Version: 1.39.21
+Date: 2026-10-15
+  Compatibility:
+    - Raised required Factorio version to 2.1.22 and fixed crashes related to breaking changes.
+---------------------------------------------------------------------------------------------------
+Version: 1.39.20
+Date: 2026-10-12
+  Graphics:
+    - Replaced four fluid icons that were already mipmapped that were erroenously processed by a mipmapping script.
+---------------------------------------------------------------------------------------------------
 Version: 1.39.19
 Date: 2026-10-11
   Graphics:
