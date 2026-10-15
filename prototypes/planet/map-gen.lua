@@ -134,6 +134,7 @@ planet_map_gen["maraxsis-trench"] = function()
             cliff_elevation = "cliff_elevation_from_elevation",
         },
         autoplace_controls = {
+            ["core-lava"] = {},
         },
         autoplace_settings = {
             ["tile"] = {

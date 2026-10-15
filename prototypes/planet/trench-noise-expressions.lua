@@ -36,6 +36,16 @@ data:extend {{
     
 }}
 
+--- The secondary tunnels that are carved into the trench wall. These are only
+--- reachable from the trench surface and are invisible on the Maraxsis surface.
+data:extend {{
+    type = "noise-expression",
+    name = "maraxsis_subtrench",
+    expression = [[
+        (maraxsis_primary_trench_elevation > ]] .. TRENCH_ENTRANCE_ELEVATION .. [[) * (maraxsis_secondary_trench_elevation < ]] .. TRENCH_ENTRANCE_ELEVATION .. [[)
+    ]]
+}}
+
 data:extend {{
     type = "noise-expression",
     name = "maraxsis_lava_master",
