@@ -72,6 +72,39 @@ core_lava_resource.minable.results = {
     {type = "fluid", name = "core-lava", amount = 10},
 }
 core_lava_resource.autoplace = core_lava_autoplace
---- Orange on the map. All other graphics remain those of crude oil.
+
+--- The mod ships its own copies of the crude-oil sprites, recoloured from black
+--- to glowing orange by graphics/recolor-crude-oil-to-lava.sh. The sprite
+--- tables are deep copied from vanilla, so they already carry their resolved
+--- sizes, shifts and frame counts; only the filenames have to move to the mod's
+--- copies. The vanilla sprite path is also a prefix of the bubbling animation's
+--- path, so one entry covers both.
+local copied_graphics = {
+    ["__base__/graphics/entity/crude-oil/crude-oil"] = "__maraxsis__/graphics/entity/core-lava/core-lava",
+    ["__base__/graphics/entity/crude-oil/oil-smoke-inner"] = "__maraxsis__/graphics/entity/core-lava/core-lava-smoke-inner",
+    ["__base__/graphics/entity/crude-oil/oil-smoke-outer"] = "__maraxsis__/graphics/entity/core-lava/core-lava-smoke-outer",
+}
+
+local function use_copied_graphics(graphics)
+    if type(graphics) ~= "table" then return end
+    for key, value in pairs(graphics) do
+        if type(value) == "table" then
+            use_copied_graphics(value)
+        elseif key == "filename" and type(value) == "string" then
+            for prefix, replacement in pairs(copied_graphics) do
+                if string.starts_with(value, prefix) then
+                    value = replacement .. value:sub(#prefix + 1)
+                end
+            end
+            graphics[key] = value
+        end
+    end
+end
+
+core_lava_resource.icon = "__maraxsis__/graphics/icons/core-lava-resource.png"
+use_copied_graphics(core_lava_resource.stages)
+use_copied_graphics(core_lava_resource.stateless_visualisation)
+
+--- Orange on the map, to match the recoloured sprites.
 core_lava_resource.map_color = {1, 0.5, 0}
 data:extend {core_lava_resource}
