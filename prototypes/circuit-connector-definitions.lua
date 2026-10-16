@@ -21,3 +21,9 @@ circuit_connector_definitions["maraxsis-regulator"] = circuit_connector_definiti
     universal_connector_template,
     {variation = 1, main_offset = util.by_pixel(58, -58), shadow_offset = util.by_pixel(0, 0), show_shadow = false}
 )
+
+-- The big regulator uses the same graphics as the regulator, so it connects at the same spot.
+circuit_connector_definitions["maraxsis-big-regulator"] = circuit_connector_definitions.create_single(
+    universal_connector_template,
+    {variation = 1, main_offset = util.by_pixel(58, -58), shadow_offset = util.by_pixel(0, 0), show_shadow = false}
+)

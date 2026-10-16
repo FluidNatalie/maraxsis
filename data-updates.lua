@@ -134,9 +134,15 @@ local function add_quality_factoriopedia_info(entity, factoriopedia_info)
     entity.factoriopedia_description = maraxsis.shorten_localised_string(factoriopedia_description)
 end
 
-add_quality_factoriopedia_info(data.raw["roboport"]["maraxsis-regulator"], {
-    {{"quality-tooltip.atmosphere-consumption"}, function(entity, quality_level)
-        local consumption_per_second = maraxsis.atmosphere_consumption(quality_level)
-        return tostring(consumption_per_second) .. "/s"
-    end}
-})
+--- @param consumption_multiplier number Multiple of the base atmosphere consumption rate.
+local function regulator_consumption_factoriopedia_info(consumption_multiplier)
+    return {
+        {{"quality-tooltip.atmosphere-consumption"}, function(entity, quality)
+            local consumption_per_second = maraxsis.atmosphere_consumption(quality) * consumption_multiplier
+            return tostring(consumption_per_second) .. "/s"
+        end}
+    }
+end
+
+add_quality_factoriopedia_info(data.raw["roboport"]["maraxsis-regulator"], regulator_consumption_factoriopedia_info(1))
+add_quality_factoriopedia_info(data.raw["roboport"]["maraxsis-big-regulator"], regulator_consumption_factoriopedia_info(2))

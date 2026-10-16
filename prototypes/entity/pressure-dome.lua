@@ -357,6 +357,10 @@ local new_dome_params = {
         diagonal_offset = 7.25,
         sprite = "maraxsis-pressure-dome-sprite-large",
         base_sprite = "maraxsis-pressure-dome-base-sprite-large",
+        --- The big dome vents twice the atmosphere, so it uses its own regulator
+        --- and its own set of regulator fluid boxes.
+        regulator = "maraxsis-big-regulator",
+        regulator_fluidbox_prefix = "maraxsis-big-regulator-fluidbox-",
         --- The big dome is an endgame structure that is framed with the nickel
         --- chain's stainless steel, so it is unlocked by its own technology
         --- instead of by maraxsis-glassworking along with the base dome.
@@ -437,7 +441,7 @@ for dome,params in pairs(new_dome_params) do
             cage_shadow,
             dome_sprite,
             dome_base_sprite,
-        }, table.deepcopy(data.raw.roboport["maraxsis-regulator"].integration_patch.layers))
+        }, table.deepcopy(data.raw.roboport[params.regulator or "maraxsis-regulator"].integration_patch.layers))
     }
 
         data:extend {{
@@ -463,6 +467,8 @@ for dome,params in pairs(new_dome_params) do
     constants.sprite = params.sprite
     constants.base_sprite = params.base_sprite
     constants.technology = params.technology
+    constants.regulator = params.regulator or constants.regulator
+    constants.regulator_fluidbox_prefix = params.regulator_fluidbox_prefix or constants.regulator_fluidbox_prefix
     maraxsis_constants.PRESSURE_DOMES[dome] = constants
 end
 

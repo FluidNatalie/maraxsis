@@ -66,6 +66,17 @@ regulator.circuit_wire_max_distance = _G.default_circuit_wire_max_distance
 
 data:extend {regulator}
 
+--- The big dome comes with its own regulator. Besides consuming more
+--- atmosphere (see maraxsis-big-regulator-fluidbox-*), a regulator doubles as
+--- the buildability proxy of its dome: placeable_by decides which dome item a
+--- blueprint of the regulator builds.
+local big_regulator = table.deepcopy(regulator)
+big_regulator.name = "maraxsis-big-regulator"
+big_regulator.placeable_by = {item = "maraxsis-big-pressure-dome", count = 1}
+big_regulator.circuit_connector = circuit_connector_definitions["maraxsis-big-regulator"]
+
+data:extend {big_regulator}
+
 data:extend {{
     type = "recipe",
     name = "maraxsis-regulator",
