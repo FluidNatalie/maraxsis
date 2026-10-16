@@ -114,7 +114,7 @@ data:extend {{
     effects = {
         {type = "unlock-recipe", recipe = "maraxsis-big-pumpjack"},
     },
-    prerequisites = {"hydraulic-science-pack"},
+    prerequisites = {"hydraulic-science-pack", "maraxsis-depth-charges"},
     unit = {
         count = 500,
         ingredients = {

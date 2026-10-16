@@ -161,7 +161,7 @@ data:extend {{
         {type = "unlock-recipe", recipe = "casting-nickel"},
         {type = "unlock-recipe", recipe = "stainless-steel"},
     },
-    prerequisites = {"hydraulic-science-pack"},
+    prerequisites = {"hydraulic-science-pack", "maraxsis-depth-charges"},
     unit = {
         count = 500,
         ingredients = {
