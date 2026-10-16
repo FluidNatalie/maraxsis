@@ -81,11 +81,20 @@ maraxsis.shorten_localised_string = function(localised_string)
     return {"", maraxsis.shorten_localised_string(first_half), maraxsis.shorten_localised_string(second_half)}
 end
 
+--- The position of the effect in a nuke's target effects that destroys cliffs,
+--- or nil if the list does not destroy cliffs.
+--- @param target_effects table
+--- @return integer|nil
+maraxsis.index_of_destroy_cliffs = function(target_effects)
+    local _, index = table.find(target_effects, function(effect) return effect.type == "destroy-cliffs" end)
+    return index
+end
+
 --- The position in a nuke's target effects right after it destroys cliffs, or
 --- the end of the list if it doesn't.
 --- @param target_effects table
 --- @return integer
 maraxsis.index_after_destroy_cliffs = function(target_effects)
-    local _, index = table.find(target_effects, function(effect) return effect.type == "destroy-cliffs" end)
+    local index = maraxsis.index_of_destroy_cliffs(target_effects)
     return index and index + 1 or #target_effects + 1
 end

@@ -352,3 +352,17 @@ data:extend {maraxsis.merge(data.raw.projectile["cliff-explosives"], {
         scale = 0.5
     },
 })}
+
+--- Core lava cliffs have to be paid out before they are destroyed, because the
+--- destroy-cliffs effect removes them without ever firing on_entity_died. Raise
+--- the trigger just before that effect and let the script find the cliffs while
+--- they are still standing.
+do
+    local target_effects = data.raw.projectile["maraxsis-big-cliff-explosives"].action[1].action_delivery.target_effects
+    local index = maraxsis.index_of_destroy_cliffs(target_effects)
+    if not index then error("maraxsis-big-cliff-explosives no longer destroys cliffs") end
+    table.insert(target_effects, index, {
+        type = "script",
+        effect_id = "maraxsis-core-lava-cliff-destroyed",
+    })
+end

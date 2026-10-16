@@ -28,6 +28,32 @@ maraxsis.on_event(defines.events.on_surface_created, function(event)
 	maraxsis.sync_trench_map_seed()
 end)
 
+--- Core lava wells are capped with rocks. The map generator cannot be told to
+--- put a cliff on a core lava tile -- it spreads cliffs over the whole patch
+--- instead -- so the cliffs are placed by script as the trench generates.
+---
+--- Rocks this close together overlap, so core lava that is already within
+--- reach of a cliff is left bare.
+local CORE_LAVA_CLIFF_SPACING = 3
+
+maraxsis.on_event(defines.events.on_chunk_generated, function(event)
+	local surface = event.surface
+	if surface.name ~= maraxsis_constants.TRENCH_SURFACE_NAME then return end
+
+	for _, core_lava in pairs(surface.find_entities_filtered {name = "core-lava", area = event.area}) do
+		local position = core_lava.position
+		if surface.count_entities_filtered {name = "maraxsis-core-lava-cliff", position = position, radius = CORE_LAVA_CLIFF_SPACING} == 0 then
+			surface.create_entity {
+				name = "maraxsis-core-lava-cliff",
+				position = position,
+				--- Land exactly on the core lava instead of on the cliff grid.
+				snap_to_grid = false,
+				create_build_effect_smoke = false
+			}
+		end
+	end
+end)
+
 maraxsis.on_event(defines.events.on_script_trigger_effect, function(event)
 	if event.effect_id ~= "maraxsis-trench-wall-created" then return end
 

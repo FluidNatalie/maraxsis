@@ -55,3 +55,41 @@ collisionless_cliff.created_effect = {
 collisionless_cliff.hidden = true
 collisionless_cliff.factoriopedia_alternative = "cliff-maraxsis"
 data:extend {collisionless_cliff}
+
+local huge_rock = data.raw["simple-entity"]["huge-rock"]
+
+--- The bounding box of the huge rock the cliff is made out of.
+local CORE_LAVA_CLIFF_BOUNDING_BOX = {{-1.5, -1.1}, {1.5, 1.1}, 0}
+
+--- A huge rock perched on top of a core lava well. Cliffs only understand the
+--- 20 directions the map generator can point them in, so instead of trying to
+--- limit this cliff to a single direction, every direction is given the same
+--- rock sprite and the same bounding box. The result is a cliff that always
+--- looks and behaves like a rock, whichever way it is placed.
+---
+--- There is no autoplace: the map generator spreads cliffs over a whole core
+--- lava patch instead of putting them on the lava itself, so
+--- `scripts/map-gen/maraxsis-trench.lua` places them by script instead, as the
+--- trench generates.
+local core_lava_cliff = maraxsis.merge(data.raw.cliff["cliff"], {
+    name = "maraxsis-core-lava-cliff",
+    --- Placeholder graphics: the huge rocks of Nauvis.
+    icon = huge_rock.icon,
+    order = "b[decorative]-l[rock]-c[core-lava-cliff]",
+    map_color = huge_rock.map_color,
+    collision_box = CORE_LAVA_CLIFF_BOUNDING_BOX,
+    selection_box = CORE_LAVA_CLIFF_BOUNDING_BOX,
+    --- These rocks are far too heavy for a handheld cliff explosive.
+    cliff_explosive = "maraxsis-big-cliff-explosives",
+    factoriopedia_simulation = "nil",
+})
+
+core_lava_cliff.orientations = {}
+for orientation in pairs(data.raw.cliff["cliff"].orientations) do
+    core_lava_cliff.orientations[orientation] = {
+        collision_bounding_box = CORE_LAVA_CLIFF_BOUNDING_BOX,
+        pictures = table.deepcopy(huge_rock.pictures),
+    }
+end
+
+data:extend {core_lava_cliff}

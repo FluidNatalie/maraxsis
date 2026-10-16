@@ -27,6 +27,7 @@ require "scripts.oversized-steam-turbine"
 require "scripts.hydraulic-science-pack"
 require "scripts.legendary-quality"
 require "scripts.trench-lighting"
+require "scripts.core-lava-cliff"
 
 require "compat.call-plumber"
 

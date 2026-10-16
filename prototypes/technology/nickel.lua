@@ -1,8 +1,9 @@
---- Nickel processing. Molten nickel is smelted out of core lava, cast into
---- nickel plates, and alloyed with molten iron into stainless steel.
+--- Nickel processing. Nickel ore is dug out of the core lava cliffs, melted
+--- into molten nickel, cast into nickel plates, and alloyed with molten iron
+--- into stainless steel.
 ---
 --- Every recipe mirrors its vanilla iron/copper counterpart field for field, so
---- all three are metallurgy (foundry) recipes that live in the vanilla
+--- they are all metallurgy (foundry) recipes that live in the vanilla
 --- vulcanus-processes subgroup next to the recipes they were modelled on. They
 --- are unlocked by a new Maraxsis technology instead of the vanilla foundry
 --- technology.
@@ -43,6 +44,43 @@ data:extend {{
         {type = "item",  name = "stone",         amount = 10},
     },
     allow_productivity = true,
+}}
+
+--- Nickel ore is blasted out of the core lava cliffs at the bottom of the
+--- trench. Like the ores of the other planets it is melted down with calcite
+--- before it can be used.
+--- Placeholder icon: reuse the vanilla iron ore icon.
+data:extend {{
+    type = "item",
+    name = "nickel-ore",
+    icon = "__base__/graphics/icons/iron-ore.png",
+    subgroup = "raw-resource",
+    order = "h[nickel-ore]",
+    stack_size = 50,
+}}
+
+--- Mirrors iron-ore-melting and copper-ore-melting.
+data:extend {{
+    type = "recipe",
+    name = "nickel-ore-melting",
+    --- Placeholder: reuse the iron ore melting icon.
+    icon = "__space-age__/graphics/icons/iron-ore-melting.png",
+    categories = {"metallurgy"},
+    subgroup = "vulcanus-processes",
+    order = "a[melting]-d[nickel-ore-melting]",
+    auto_recycle = false,
+    enabled = false,
+    ingredients = {
+        {type = "item", name = "nickel-ore", amount = 50},
+        {type = "item", name = "calcite",    amount = 1},
+    },
+    energy_required = 32,
+    results = {
+        {type = "fluid", name = "molten-nickel", amount = 500},
+    },
+    hide_from_signal_gui = false,
+    allow_productivity = true,
+    main_product = "molten-nickel",
 }}
 
 --- Placeholder icon: the holmium plate is the closest thing vanilla has to a
@@ -119,6 +157,7 @@ data:extend {{
     icon_size = 256,
     effects = {
         {type = "unlock-recipe", recipe = "molten-nickel-from-core-lava"},
+        {type = "unlock-recipe", recipe = "nickel-ore-melting"},
         {type = "unlock-recipe", recipe = "casting-nickel"},
         {type = "unlock-recipe", recipe = "stainless-steel"},
     },
