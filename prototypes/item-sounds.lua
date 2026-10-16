@@ -46,6 +46,8 @@ add_sound_item("maraxsis-wyrm-specimen", item_sounds.raw_fish_inventory_move, it
 add_sound_item("maraxsis-wyrm-confinement-cell", item_sounds.metal_small_inventory_move, item_sounds.metal_small_inventory_pickup, item_sounds.metal_small_inventory_move)
 add_sound_item("maraxsis-super-sealant-substance", space_age_item_sounds.agriculture_inventory_move, space_age_item_sounds.agriculture_inventory_pickup, space_age_item_sounds.agriculture_inventory_move)
 add_sound_item("salt", item_sounds.resource_inventory_move, item_sounds.resource_inventory_pickup, item_sounds.resource_inventory_move)
+add_sound_item("nickel-plate", item_sounds.metal_small_inventory_move, item_sounds.metal_small_inventory_pickup, item_sounds.metal_small_inventory_move)
+add_sound_item("stainless-steel", item_sounds.metal_small_inventory_move, item_sounds.metal_small_inventory_pickup, item_sounds.metal_small_inventory_move)
 add_sound_item("maraxsis-salt-filter", item_sounds.steam_inventory_move, item_sounds.steam_inventory_pickup, item_sounds.steam_inventory_move)
 add_sound_item("maraxsis-saturated-salt-filter", item_sounds.steam_inventory_move, item_sounds.steam_inventory_pickup, item_sounds.steam_inventory_move)
 add_sound_item("maraxsis-abyssal-diving-gear", item_sounds.metal_large_inventory_move, item_sounds.metal_large_inventory_pickup, item_sounds.metal_large_inventory_move)
