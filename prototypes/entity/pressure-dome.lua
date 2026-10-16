@@ -350,7 +350,7 @@ local new_dome_params = {
     --     sprite = "maraxsis-pressure-dome-sprite-small",
     --     base_sprite = "maraxsis-pressure-dome-sprite-small",
     -- },
-    ["maraxsis-pressure-dome-large"] = {
+    ["maraxsis-big-pressure-dome"] = {
         octagon_size = 24.5,
         --corner_size = 10,
         dome_collider = "maraxsis-pressure-dome-collision-large",
@@ -360,7 +360,7 @@ local new_dome_params = {
         --- The big dome is an endgame structure that is framed with the nickel
         --- chain's stainless steel, so it is unlocked by its own technology
         --- instead of by maraxsis-glassworking along with the base dome.
-        technology = "maraxsis-pressure-dome-large",
+        technology = "maraxsis-big-pressure-dome",
         --- Overrides the base dome's recipe fields. Everything else, including
         --- its category and auto_recycle, is inherited.
         recipe = {
@@ -476,11 +476,11 @@ end
 --- frame it. The base dome stays on maraxsis-glassworking.
 data:extend {{
     type = "technology",
-    name = "maraxsis-pressure-dome-large",
+    name = "maraxsis-big-pressure-dome",
     icon = "__maraxsis__/graphics/technology/pressure-dome-big.png",
     icon_size = 256,
     effects = {
-        {type = "unlock-recipe", recipe = "maraxsis-pressure-dome-large"},
+        {type = "unlock-recipe", recipe = "maraxsis-big-pressure-dome"},
     },
     prerequisites = {"maraxsis-nickel-processing"},
     unit = {
@@ -495,5 +495,5 @@ data:extend {{
         },
         time = 30,
     },
-    order = "ex[maraxsis]-d[pressure-dome-large]",
+    order = "ex[maraxsis]-d[big-pressure-dome]",
 }}
