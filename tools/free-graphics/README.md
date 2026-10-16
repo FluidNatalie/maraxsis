@@ -1,0 +1,196 @@
+# Free graphics tooling
+
+Three small scripts for sourcing placeholder-replacement art from
+[snouz's free graphics for modders](https://github.com/snouz/factorio_free_graphics_for_modders)
+and shaping it into this mod's conventions. Nothing here runs as part of the mod: it is
+authoring-time tooling, kept next to the art it produced so the provenance and the exact
+transformation of every third-party icon stays reproducible.
+
+| Script | Job |
+| --- | --- |
+| `ffg.py` | catalogue the upstream repo, resolve a licence for every file, download only what passes the filters |
+| `make_icon.py` | build a 120×64 (item/recipe/fluid) or 480×256 (technology) icon sheet from a 64/256 px source |
+| `extract_rocks.py` | split a sprite sheet into individual, tightly cropped rocks |
+
+Requirements: `python3` and `Pillow` for the two asset scripts, network access for `ffg.py`.
+Anything downloaded stays out of the repository until it is deliberately copied in, and every
+file that *is* copied in must get a block in `CREDITS.md` (see [Licences](#licences)).
+
+## ffg.py
+
+Upstream is ~7.4 GB / 28,893 files across 242 directories and is never cloned. `ffg.py` caches the
+git tree manifest and the README, resolves a licence per path, then fetches only the matches.
+Cache and downloads default to `.cache/` beside the script (gitignored); set `FFG_CACHE` to move
+them, e.g. to a tmpfs.
+
+```bash
+python3 tools/free-graphics/ffg.py update      # one-off, re-run to re-sync: caches tree + README
+python3 tools/free-graphics/ffg.py stats       # tier coverage + how each licence was resolved
+```
+
+### Browse, then pull
+
+```bash
+# 1. what is in a folder, grouped by source pack + licence
+python3 tools/free-graphics/ffg.py packs --path "icons/ore" --limit 100000
+
+# 2. narrow down (regex on the path, plus extension and size filters)
+python3 tools/free-graphics/ffg.py list  --path "icons/plate, brick" --match "nickel|steel" --ext png --explain
+
+# 3. check the real pixel dimensions first - PNG header only, via HTTP Range
+python3 tools/free-graphics/ffg.py dims  --path "icons_technology/materials" --match "nickel-processing"
+
+# 4. download just those, recording provenance
+python3 tools/free-graphics/ffg.py fetch --path "icons/plate, brick" --match "nickel-plate" --ext png
+
+# 5. turn the fetch manifest into CREDITS.md-ready blocks
+python3 tools/free-graphics/ffg.py credits
+```
+
+Everything lands in `<cache>/downloads/` plus a `manifest.json` (path, url, sha256, pack, licence,
+tier, authors). `credits` reads that manifest, so generated blocks always match what was actually
+pulled. Filenames that collide across upstream directories get a `~2`, `~3` … suffix.
+
+The commands below are written from the repository root; only `ffg.py` touches the network, and the
+cache is relative to the script, not to the working directory.
+
+### Filters
+
+| Flag | Meaning |
+| --- | --- |
+| `--match REGEX` / `--exclude REGEX` | filename regex (case-insensitive) |
+| `--path PREFIX` | path prefix |
+| `--ext png,ogg` | extension allow-list |
+| `--tier permissive\|noncommercial\|copyleft\|restricted\|all` | default `permissive` |
+| `--license "MIT,CC BY"` | explicit licence strings, overrides `--tier` |
+| `--min-bytes` / `--max-bytes` / `--limit` | size and count caps |
+| `--explain`, `--json` | show/match provenance, machine-readable output |
+
+### Tiers (and why the default is `permissive`)
+
+| Tier | Licences | Consequence |
+| --- | --- | --- |
+| `permissive` | MIT, CC BY, CC0, public domain, Apache, Mozilla, WTFPL | ship with attribution in `CREDITS.md` |
+| `noncommercial` | any NC | free mod is fine, monetisation is not |
+| `copyleft` | GPL/LGPL, CC BY-SA | would force this MIT mod to GPLv3 / impose share-alike |
+| `restricted` | Wube's EULA, "ASK … FOR PERMISSION", TurboSquid, unclear | cannot ship |
+| `unknown` | unresolved | **never** fetched by default |
+
+`MIT / CC-BY-SA` is read as permissive (we take the MIT option); bare `CC BY-SA` is copyleft.
+
+Licences come from the in-path tag (`… (MIT)/`, `… - Foo (GPLv3) - …`) first, then from the README
+mod list, joined on the pack-name prefix with plural/casing tolerance. Two guards keep it honest: a
+substitution is only accepted at ≥60% majority-token overlap normalised by the *longer* name (so
+`Factorio 2 Core` does not inherit `Factorio+`'s MIT), and anything unmatched stays `unknown`.
+`--explain` prints which README entry a verdict came from.
+
+### Overrides
+
+When the resolver is wrong, or a pack is genuinely missing from the README, add an entry to
+`<cache>/license_overrides.json` - keyed by exact path **or** by pack name:
+
+```json
+{ "Moshine": { "license": "MIT", "authors": "Moshine dev", "tier": "permissive",
+               "url": "https://mods.factorio.com/mod/…" } }
+```
+
+### Caveats
+
+* Catalog assets are **previews**: upstream strips animations, rotations, shadows and masks. Treat
+  them as icon sources and kitbash parts, not drop-in `RotatedSprite`s.
+* `Ψ generated by AI/` (1,504 files) is forced to `unknown`: provenance is unclear.
+* Avoid `icons_technology/Vanilla icons upscaled by snouz (CC BY)`. The folder is tagged CC BY, but
+  the underlying art is Wube's, so shipping it is a redistribution risk.
+
+## make_icon.py
+
+Vanilla 2.x, and therefore this mod, ships *multi-scale* icon sheets instead of a single square
+image: `icon_size = 64` art is a 120×64 file whose top-left 64×64 is the icon and whose right-hand
+columns are the 32 and 24 px copies, and `icon_size = 256` technology art is 480×256 with the 128
+and 96 px copies. The game only ever samples the top-left cell, but every other icon in the repo
+ships the reduced copies, so these do too.
+
+```bash
+# a 64x64 catalog icon -> a 120x64 item/recipe/fluid sheet
+python3 tools/free-graphics/make_icon.py expand SOURCE.png graphics/icons/thing.png --kind item
+
+# a 256x256 technology icon -> a 480x256 sheet
+python3 tools/free-graphics/make_icon.py expand SOURCE.png graphics/technology/thing.png --kind tech
+
+# kitbash two catalog pieces into one 64x64 icon (X:Y:SIZE, inside the 64px cell)
+python3 tools/free-graphics/make_icon.py compose graphics/icons/thing.png --kind item \
+    --layer "molten.png:0:11:44" --layer "ore.png:30:31:34"
+
+# nudge catalog art onto this mod's palette
+python3 tools/free-graphics/make_icon.py expand SOURCE.png graphics/icons/thing.png --tint '#9FD8BE:0.3'
+```
+
+`--tint` blends a flat colour over the finished sheet while keeping the alpha channel, so highlights
+and shadows survive and the icon reads as the same material in another palette. It is a change worth
+recording in `CREDITS.md`.
+
+Sources must be exactly 64×64 (or 256×256 for `--kind tech`), which is what the catalogue ships;
+an already-built 120×64/480×256 sheet is accepted and reduced to its main cell.
+
+## extract_rocks.py
+
+Sprite sheets arrive without their sprite rectangles, so the rectangles are recovered by
+connected-component labelling of the alpha channel. It prints each rock's centre offset relative to
+the sheet centre, which is what a Factorio `shift` is derived from (a tightly cropped sprite is
+centred on the entity, so the offset only matters for hand-tuned placement).
+
+```bash
+python3 tools/free-graphics/extract_rocks.py "tools/free-graphics/.cache/downloads/sheet-8.png" \
+    tools/free-graphics/.cache/rocks rock --min-area 4000 --min-dim 60
+#   tools/free-graphics/.cache/rocks/rock-1.png  223x254  centre_offset=(-6.5,-8.0)px  area=41222
+```
+
+## Worked example: the nickel chain and the core lava cliff
+
+The icons in `prototypes/technology/nickel.lua` and the rocks in `prototypes/entity/cliffs.lua` were
+produced with exactly these commands, run from the repository root. Upstream files are named
+`… - <original filename>.png` in `<cache>/downloads/`; `~2` suffixes distinguish same-named files
+from different upstream folders.
+
+```bash
+A=tools/free-graphics/.cache/downloads
+M="python3 tools/free-graphics/make_icon.py"
+
+# nine icon sheets (Periodic Madness and Artisanal Reskins, both MIT)
+$M expand "$A/Periodic Madness - nickel-ore-icon.png"          graphics/icons/nickel-ore.png                 --kind item
+$M expand "$A/Periodic Madness - isogrid-crucible.png"         graphics/icons/nickel-ore-melting.png         --kind item
+$M expand "$A/Periodic Madness - intermediate-casting~2.png"   graphics/icons/casting-nickel.png             --kind item
+$M expand "$A/Artisanal Reskins - nickel-plate.png"            graphics/icons/nickel-plate.png               --kind item
+$M expand "$A/Artisanal Reskins - invar-alloy.png"             graphics/icons/stainless-steel.png            --kind item
+$M expand "$A/Periodic Madness - vanadium-chromium-alloying~2.png" graphics/icons/casting-stainless-steel.png --kind item
+$M expand "$A/Periodic Madness - advanced-nickel-processing.png"   graphics/technology/maraxsis-nickel-processing.png --kind tech
+
+# the two molten nickel icons are tinted to the fluid's pale green
+$M expand "$A/Periodic Madness - molten-nickel.png"   graphics/icons/molten-nickel.png                --kind item --tint '#9FD8BE:0.3'
+$M expand "$A/Periodic Madness - nickel-tailings.png" graphics/icons/molten-nickel-from-core-lava.png --kind item --tint '#9FD8BE:0.3'
+
+# three cliff rocks, cut out of Khemia's medium rock sheets (MIT)
+R=tools/free-graphics/.cache/rocks
+E="python3 tools/free-graphics/extract_rocks.py"
+$E "$A/Khemia (MIT) - graphics - entities - rocks-medium - rocks-medium-sheet-8.png"  "$R" rock8  --min-area 4000 --min-dim 60
+$E "$A/Khemia (MIT) - graphics - entities - rocks-medium - rocks-medium-sheet-11.png" "$R" rock11 --min-area 4000 --min-dim 60
+$E "$A/Khemia (MIT) - graphics - entities - rocks-medium - rocks-medium-sheet-7.png"  "$R" rock7  --min-area 4000 --min-dim 60
+# the largest component of each sheet is the rock that shipped
+cp "$R/rock8-1.png"  graphics/entity/core-lava-cliff/core-lava-cliff-1.png
+cp "$R/rock11-1.png" graphics/entity/core-lava-cliff/core-lava-cliff-2.png
+cp "$R/rock7-1.png"  graphics/entity/core-lava-cliff/core-lava-cliff-3.png
+$M compose graphics/icons/core-lava-cliff.png --kind item --layer "$R/rock8-1.png:4:0:56"
+```
+
+The rocks are drawn at `scale = 0.4` with a `shift.y` that seats each rock's base on the bottom of
+the cliff's bounding box; those numbers live in `prototypes/entity/cliffs.lua`.
+
+## Licences
+
+`ffg.py` only ever tells you what it *found* upstream. Before a file ships:
+
+1. check the licence is permissive (the default tier) and that the pack does not merely re-tag
+   Wube's art;
+2. copy the file into `graphics/`;
+3. add or extend a block in `CREDITS.md` - Creators / Source / License / Changes - and say exactly
+   what was done to the art (cropped, rescaled, tinted, kitbashed).

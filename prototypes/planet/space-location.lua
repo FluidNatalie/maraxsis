@@ -1,6 +1,5 @@
 require "maraxsis-noise-expressions"
 require "trench-noise-expressions"
-require "core-lava"
 
 local asteroid_util = require "__space-age__.prototypes.planet.asteroid-spawn-definitions"
 local planet_map_gen = require "map-gen"

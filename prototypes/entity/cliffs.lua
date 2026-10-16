@@ -61,6 +61,36 @@ local huge_rock = data.raw["simple-entity"]["huge-rock"]
 --- The bounding box of the huge rock the cliff is made out of.
 local CORE_LAVA_CLIFF_BOUNDING_BOX = {{-1.5, -1.1}, {1.5, 1.1}, 0}
 
+--- The three rocks the cliff can be made out of, cropped out of Khemia's
+--- medium rock sheets (see CREDITS.md). They are drawn at 0.4 scale, which
+--- makes a rock a little under three tiles wide, about the size of the huge
+--- rocks the vanilla cliffs are built from, and shifted up so that the base of
+--- each rock sits on the bottom edge of the bounding box instead of hanging
+--- over the lava it stands in.
+local CORE_LAVA_CLIFF_ROCKS = {
+    {
+        filename = "__maraxsis__/graphics/entity/core-lava-cliff/core-lava-cliff-1.png",
+        width = 223,
+        height = 254,
+        scale = 0.4,
+        shift = {0, -0.5}
+    },
+    {
+        filename = "__maraxsis__/graphics/entity/core-lava-cliff/core-lava-cliff-2.png",
+        width = 224,
+        height = 215,
+        scale = 0.4,
+        shift = {0, -0.25}
+    },
+    {
+        filename = "__maraxsis__/graphics/entity/core-lava-cliff/core-lava-cliff-3.png",
+        width = 228,
+        height = 191,
+        scale = 0.4,
+        shift = {0, -0.09375}
+    },
+}
+
 --- A huge rock perched on top of a core lava well. Cliffs only understand the
 --- 20 directions the map generator can point them in, so instead of trying to
 --- limit this cliff to a single direction, every direction is given the same
@@ -73,8 +103,8 @@ local CORE_LAVA_CLIFF_BOUNDING_BOX = {{-1.5, -1.1}, {1.5, 1.1}, 0}
 --- trench generates.
 local core_lava_cliff = maraxsis.merge(data.raw.cliff["cliff"], {
     name = "maraxsis-core-lava-cliff",
-    --- Placeholder graphics: the huge rocks of Nauvis.
-    icon = huge_rock.icon,
+    --- The icon is the first of the rock sprites below.
+    icon = "__maraxsis__/graphics/icons/core-lava-cliff.png",
     order = "b[decorative]-l[rock]-c[core-lava-cliff]",
     map_color = huge_rock.map_color,
     collision_box = CORE_LAVA_CLIFF_BOUNDING_BOX,
@@ -88,7 +118,7 @@ core_lava_cliff.orientations = {}
 for orientation in pairs(data.raw.cliff["cliff"].orientations) do
     core_lava_cliff.orientations[orientation] = {
         collision_bounding_box = CORE_LAVA_CLIFF_BOUNDING_BOX,
-        pictures = table.deepcopy(huge_rock.pictures),
+        pictures = CORE_LAVA_CLIFF_ROCKS,
     }
 end
 

@@ -98,6 +98,28 @@ owned by base or another mod.
   }
   ```
 
+## Third-party art (`tools/free-graphics/`)
+
+`tools/free-graphics/` holds the authoring-time tools used to pull replacement art out of
+[snouz's free graphics collection](https://github.com/snouz/factorio_free_graphics_for_modders)
+and shape it into the house icon sheets: `ffg.py` (browse and fetch, with licence resolution),
+`make_icon.py` (120×64 and 480×256 sheets, optional palette tint) and `extract_rocks.py`
+(sprite-sheet cropping). Its README carries the exact commands behind the nickel chain and the
+core lava cliff rocks.
+
+Sourcing rules:
+
+* `--tier permissive` only — MIT, CC BY, CC0, public domain, Apache, Mozilla, WTFPL. Never ship
+  GPL/LGPL or CC BY-SA (they relicense this MIT mod), NC, Wube's EULA, or the catalogue's
+  "ASK … FOR PERMISSION" and unknown-provenance files.
+* Skip `icons_technology/Vanilla icons upscaled by snouz (CC BY)`: the folder is tagged CC BY, but
+  the art underneath is Wube's.
+* Anything that reaches `graphics/` gets a Creators / Source / License / Changes block in
+  `CREDITS.md`, describing what was done to the art (cropped, rescaled, tinted, kitbashed).
+* A placeholder is only worth replacing if it misleads the player. Referencing vanilla art from a
+  prototype (`__base__/graphics/icons/iron-ore.png`) is legal and free of build cost; replacing it
+  is about the icon being *wrong*, not about the licence.
+
 ## Validation workflow
 
 The game *is* the test suite. Use a scratch mod directory so you never disturb the user's real
@@ -223,10 +245,14 @@ grep -in "error\|warning\|nan\|inf" run.log
   `maraxsis-trench-factory-floor` (see `maraxsis_constants.MARAXSIS_SURFACES` /
   `MARAXSIS_TRENCH_SURFACES`). The trench surface is `maraxsis-trench`; its origin area is mostly
   `maraxsis-trench-out-of-map` tiles, so `find_entities_filtered` near the origin sees very little.
-* **Core lava** (`prototypes/planet/core-lava.lua`): a resource *and* a fluid, trench-only, orange
+* **Core lava** (defined in `prototypes/technology/nickel.lua`, alongside the chain it feeds): a
+  resource *and* a fluid, trench-only, orange
   map colour, oil-like density. It can only be mined by `maraxsis-big-pumpjack` (purple fork of the
   vanilla pumpjack: 150% mining speed, 50% drain, `ducts` connection category). Graphics are forked
   from vanilla and recoloured with `graphics/hue-shift-green-to-purple.sh`.
+  It lives here rather than in `prototypes/planet/` because `PlanetsLib.melting_icon` resolves
+  prototype icons **at call time**, so core lava must already exist when the nickel recipes that
+  draw it into their composite icons are created.
 * **Nickel chain** (`prototypes/technology/nickel.lua`): `nickel-ore` (item only — no ore
   resource/autoplace; the cliff drop is its only source), `nickel-ore-melting` (→ `molten-nickel`),
   `molten-nickel` (deepcopy of vanilla `molten-iron`, teal), `casting-nickel` (→ `nickel-plate`),

@@ -89,3 +89,24 @@
 - **Source**: [Quality Trees](https://mods.factorio.com/mod/quality-trees)
 - **License**: [MIT](https://opensource.org/license/MIT)
 - **Changes**: Yes. Adapted for use in the fishing tower.
+
+#### Periodic Madness - Nickel Icons
+
+- **Creators**: [Mr.SmoothieHuman](https://mods.factorio.com/user/Mr.SmoothieHuman)
+- **Source**: [Periodic Madness](https://mods.factorio.com/mod/periodic-madness), via [free graphics for modders](https://github.com/snouz/factorio_free_graphics_for_modders)
+- **License**: [MIT](https://opensource.org/license/MIT)
+- **Changes**: Yes. Cut down to 64x64 and laid out as 120x64 icon sheets, and the technology icon as a 480x256 sheet. The molten nickel and nickel tailings icons are tinted green to match the colour of the molten nickel fluid.
+
+#### Artisanal Reskins - Nickel and Stainless Steel Plates
+
+- **Creators**: [Kirazy](https://mods.factorio.com/user/Kirazy)
+- **Source**: [Artisanal Reskins: Bob's mods](https://mods.factorio.com/mod/reskins-bobs), via [free graphics for modders](https://github.com/snouz/factorio_free_graphics_for_modders)
+- **License**: [MIT](https://opensource.org/license/MIT)
+- **Changes**: Yes. Cut down to 64x64 and laid out as 120x64 icon sheets.
+
+#### Khemia - Core Lava Cliff Rocks
+
+- **Creators**: [GabeWithGlasses](https://mods.factorio.com/user/GabeWithGlasses)
+- **Source**: [Khemia: Age of Alchemy](https://mods.factorio.com/mod/alchemy-khemia), via [free graphics for modders](https://github.com/snouz/factorio_free_graphics_for_modders)
+- **License**: [MIT](https://opensource.org/license/MIT)
+- **Changes**: Yes. Individual rocks cut out of the medium rock sprite sheets; one of them rescaled for the core lava cliff icon.
