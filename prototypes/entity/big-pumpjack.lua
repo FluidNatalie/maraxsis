@@ -82,7 +82,6 @@ local big_pumpjack_item = table.deepcopy(data.raw.item["pumpjack"])
 big_pumpjack_item.name = "maraxsis-big-pumpjack"
 big_pumpjack_item.icon = "__maraxsis__/graphics/icons/big-pumpjack.png"
 big_pumpjack_item.place_result = "maraxsis-big-pumpjack"
-big_pumpjack_item.order = "b[fluids]-c[maraxsis-big-pumpjack]"
 big_pumpjack_item.stack_size = 10
 data:extend {big_pumpjack_item}
 

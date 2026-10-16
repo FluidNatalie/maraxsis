@@ -75,9 +75,17 @@ owned by base or another mod.
 
 * Recipes/items/fluids that are Maraxsis' own are prefixed `maraxsis-`; items that read like
   vanilla base materials (`nickel-plate`, `stainless-steel`, `nickel-ore`) are *not* prefixed.
-* Subgroup/order placement is chosen to slot in next to the vanilla equivalent, e.g.
-  `subgroup = "raw-resource"`, `order = "h[nickel-ore]"` sits between uranium ore and ice;
-  recipes go in `subgroup = "vulcanus-processes"`.
+* Maraxsis prototypes are grouped with other Maraxsis prototypes. Items, recipes and fluids that
+  Maraxsis owns are placed in the mod's own `maraxsis-*` subgroups in
+  `prototypes/item-subgroups.lua` (`make_subgroup`, e.g. `maraxsis-metallurgy`, `salt`,
+  `advanced-fluids`) or in the `f[maraxsis-fluids]-*` block of the `fluid` subgroup
+  (`order_subgroup`) — do *not* interleave them into the vanilla subgroup they were modelled on
+  (`raw-resource`, `raw-material`, `vulcanus-processes`, ...). Single machines and combat items are
+  the exception: they sit next to their vanilla counterpart, ordered off the vanilla prototype's
+  order/name (e.g. `maraxsis-sonar` off `radar`, `maraxsis-big-pumpjack` off `pumpjack`,
+  `maraxsis-fat-man` off `artillery-shell`), because Maraxsis has no machine subgroup of its own.
+  Recipes are only given an order where they must not follow their product's item subgroup; like
+  vanilla machine recipes, most have none.
 * Item rocket weight: `prototypes/item-weight.lua` (`i_want_to_fit_this_many_per_rocket`).
   Item sounds: `prototypes/item-sounds.lua`. Both live in `data-updates.lua`.
 * Locale lives in `locale/en/locale.cfg` under `[item-name]`, `[entity-name]`,

@@ -71,6 +71,21 @@ do
     make_subgroup("omega-3", "gh", "intermediate-products", omega_3)
 end
 
+--- The nickel chain: nickel ore dug out of the core lava cliffs is melted into
+--- molten nickel, cast into nickel plates and alloyed with molten iron into
+--- stainless steel. The recipes are metallurgy recipes that were modelled on
+--- their vanilla iron/copper counterparts, but they are gathered here instead
+--- of being interleaved into the vanilla vulcanus-processes subgroup.
+make_subgroup("maraxsis-metallurgy", "gi", "intermediate-products", {
+    data.raw.item["nickel-ore"],
+    data.raw.recipe["nickel-ore-melting"],
+    data.raw.recipe["molten-nickel-from-core-lava"],
+    data.raw.item["nickel-plate"],
+    data.raw.recipe["casting-nickel"],
+    data.raw.item["stainless-steel"],
+    data.raw.recipe["stainless-steel"],
+})
+
 local function order_subgroup(prototype_type, name, order, subgroup)
     local prototype = data.raw[prototype_type][name]
     if prototype then
@@ -96,19 +111,23 @@ order_subgroup("item", "maraxsis-big-pressure-dome", "z-d-b[pressure-dome-big]",
 order_subgroup("lamp", "maraxsis-pressure-dome-lamp", "z-d-c[pressure-dome-lamp]", "environmental-protection")
 order_subgroup("constant-combinator", "maraxsis-pressure-dome-combinator", "z-d-d[pressure-dome-lamp]", "environmental-protection")
 order_subgroup("simple-entity", "maraxsis-water-shader", "z", "grass")
+order_subgroup("item", "maraxsis-big-pumpjack", "b[fluids]-c[maraxsis-big-pumpjack]", data.raw.item["pumpjack"].subgroup)
 
 order_subgroup("fluid", "maraxsis-saline-water", "f[maraxsis-fluids]-a[saline-water]", "fluid")
 order_subgroup("fluid", "maraxsis-brackish-water", "f[maraxsis-fluids]-b[brackish-water]", "fluid")
 order_subgroup("fluid", "oxygen", "f[maraxsis-fluids]-c[oxygen]", "fluid")
 order_subgroup("fluid", "hydrogen", "f[maraxsis-fluids]-d[hydrogen]", "fluid")
+order_subgroup("fluid", "molten-nickel", "f[maraxsis-fluids]-e[molten-nickel]", "fluid")
 order_subgroup("fluid", "maraxsis-atmosphere", "f[maraxsis-fluids]-f[atmosphere]", "fluid")
 order_subgroup("fluid", "maraxsis-liquid-atmosphere", "f[maraxsis-fluids]-f[liquid-atmosphere]", "fluid")
+order_subgroup("fluid", "core-lava", "f[maraxsis-fluids]-g[core-lava]", "fluid")
 order_subgroup("fluid", "maraxsis-supercritical-steam", "f[maraxsis-fluids]-h[maraxsis-supercritical-steam]", "fluid")
 order_subgroup("fluid", "maraxsis-omega-3", "f[maraxsis-fluids]-i[maraxsis-omega-3]", "fluid")
 
 order_subgroup("capsule", "maraxsis-big-cliff-explosives", "e[big-cliff-explosives]", data.raw.capsule["cliff-explosives"].subgroup)
 order_subgroup("ammo", "maraxsis-fat-man", "e[maraxsis-fat-man]", data.raw.ammo["artillery-shell"].subgroup)
 order_subgroup("resource", "maraxsis-coral", "x[maraxsis-coral]", "mineable-fluids")
+order_subgroup("resource", "core-lava", "x[maraxsis-core-lava]", "mineable-fluids")
 order_subgroup("item", "maraxsis-conduit", data.raw.item.beacon.order .. "a[maraxsis-conduit]", data.raw.item.beacon.subgroup)
 
 require "compat.schall-transport-group"

@@ -9,10 +9,12 @@ local resource_autoplace = require "resource-autoplace"
 --- composite icons, so it has to exist before they are created.
 ---
 --- Every recipe mirrors its vanilla iron/copper counterpart field for field, so
---- they are all metallurgy (foundry) recipes that live in the vanilla
---- vulcanus-processes subgroup next to the recipes they were modelled on. They
---- are unlocked by a new Maraxsis technology instead of the vanilla foundry
---- technology.
+--- they are all metallurgy (foundry) recipes, but they are unlocked by a new
+--- Maraxsis technology instead of the vanilla foundry technology. The chain's
+--- items and recipes are gathered in the mod's own maraxsis-metallurgy subgroup
+--- (see prototypes/item-subgroups.lua), and its fluids in the maraxsis-fluids
+--- block, rather than being interleaved into the vanilla subgroups they were
+--- modelled on.
 ---
 --- The icons are taken from snouz's free graphics collection: each one names
 --- the pack it came from, and CREDITS.md carries the licences.
@@ -34,7 +36,8 @@ core_lava_fluid.base_color = {
     math.max(core_lava_fluid.base_color[2] - darken,0),
     math.max(core_lava_fluid.base_color[3] - darken,0),
 }
-core_lava_fluid.order = core_lava_fluid.order .. "a"
+--- Order and subgroup are assigned in prototypes/item-subgroups.lua, which
+--- groups every Maraxsis fluid together.
 data:extend {core_lava_fluid}
 
 data:extend {{
@@ -134,7 +137,6 @@ molten_nickel.name = "molten-nickel"
 --- A puddle of molten nickel, from Periodic Madness, tinted to the pale green
 --- the fluid is drawn in.
 molten_nickel.icon = "__maraxsis__/graphics/icons/molten-nickel.png"
-molten_nickel.order = "b[new-fluid]-b[vulcanus]-c[molten-nickel]"
 molten_nickel.base_color = {0.10, 0.30, 0.20}
 molten_nickel.flow_color = {0.50, 0.90, 0.70}
 data:extend {molten_nickel}
@@ -149,8 +151,6 @@ data:extend {{
     --icon = "__maraxsis__/graphics/icons/molten-nickel-from-core-lava.png",
     icons = PlanetsLib.melting_icon("molten-nickel","core-lava","stone"),
     categories = {"metallurgy"},
-    subgroup = "vulcanus-processes",
-    order = "a[melting]-a[lava-c]",
     auto_recycle = false,
     enabled = false,
     ingredients = {
@@ -173,8 +173,6 @@ data:extend {{
     type = "item",
     name = "nickel-ore",
     icon = "__maraxsis__/graphics/icons/nickel-ore.png",
-    subgroup = "raw-resource",
-    order = "h[nickel-ore]",
     stack_size = 50,
 }}
 
@@ -186,8 +184,6 @@ data:extend {{
     icon = "__maraxsis__/graphics/icons/nickel-ore-melting.png",
     icons = PlanetsLib.melting_icon("molten-nickel","nickel-ore"),
     categories = {"metallurgy"},
-    subgroup = "vulcanus-processes",
-    order = "a[melting]-d[nickel-ore-melting]",
     auto_recycle = false,
     enabled = false,
     ingredients = {
@@ -208,8 +204,6 @@ data:extend {{
     type = "item",
     name = "nickel-plate",
     icon = "__maraxsis__/graphics/icons/nickel-plate.png",
-    subgroup = "raw-material",
-    order = "a[smelting]-d[nickel-plate]",
     stack_size = 100,
 }}
 
@@ -221,8 +215,6 @@ data:extend {{
     --icon = "__maraxsis__/graphics/icons/casting-nickel.png",
     icons = PlanetsLib.dual_icon("nickel-plate","molten-nickel"),
     categories = {"metallurgy"},
-    subgroup = "vulcanus-processes",
-    order = "b[casting]-d[casting-nickel]",
     enabled = false,
     ingredients = {
         {type = "fluid", name = "molten-nickel", amount = 20, fluidbox_multiplier = 10},
@@ -241,8 +233,6 @@ data:extend {{
     type = "item",
     name = "stainless-steel",
     icon = "__maraxsis__/graphics/icons/stainless-steel.png",
-    subgroup = "raw-material",
-    order = "a[smelting]-e[stainless-steel]",
     stack_size = 100,
 }}
 
@@ -255,8 +245,6 @@ data:extend {{
     --- shapes, the way vanilla draws casting-steel.
     icon = "__maraxsis__/graphics/icons/stainless-steel.png",
     categories = {"metallurgy"},
-    subgroup = "vulcanus-processes",
-    order = "b[casting]-e[casting-stainless-steel]",
     enabled = false,
     ingredients = {
         {type = "fluid", name = "molten-iron",   amount = 30, fluidbox_multiplier = 10},
