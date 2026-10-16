@@ -357,6 +357,21 @@ local new_dome_params = {
         diagonal_offset = 7.25,
         sprite = "maraxsis-pressure-dome-sprite-large",
         base_sprite = "maraxsis-pressure-dome-base-sprite-large",
+        --- The big dome is an endgame structure that is framed with the nickel
+        --- chain's stainless steel, so it is unlocked by its own technology
+        --- instead of by maraxsis-glassworking along with the base dome.
+        technology = "maraxsis-pressure-dome-large",
+        --- Overrides the base dome's recipe fields. Everything else, including
+        --- its category and auto_recycle, is inherited.
+        recipe = {
+            ingredients = {
+                {type = "item", name = "maraxsis-glass-panes", amount = 5000},
+                {type = "item", name = "stainless-steel",      amount = 2000},
+                {type = "item", name = "tungsten-plate",       amount = 500},
+                {type = "item", name = "pipe",                 amount = 100},
+            },
+            energy_required = 30,
+        },
     }
 }    
 
@@ -382,6 +397,9 @@ for dome,params in pairs(new_dome_params) do
     roboport.name = dome
     recipe.name = dome
     recipe.results[1].name = dome
+    for key, value in pairs(params.recipe or {}) do
+        recipe[key] = value
+    end
     collider.name = params.dome_collider
     collider.selection_box = {{-params.corner_size, -0.5}, {params.corner_size, 0.5}}
     collider.collision_box = {{-params.corner_size, -0.3}, {params.corner_size, 0.3}}
@@ -444,6 +462,7 @@ for dome,params in pairs(new_dome_params) do
     constants.diagonal_offset = params.diagonal_offset
     constants.sprite = params.sprite
     constants.base_sprite = params.base_sprite
+    constants.technology = params.technology
     maraxsis_constants.PRESSURE_DOMES[dome] = constants
 end
 
@@ -452,3 +471,29 @@ for key,dome_data in pairs(maraxsis_constants.PRESSURE_DOMES) do
     local dome = data.raw["roboport"][dome_data.pressure_dome]
     dome.custom_tooltips = dome.custom_tooltips or {}
 end
+
+--- The big dome is unlocked on its own, once stainless steel is available to
+--- frame it. The base dome stays on maraxsis-glassworking.
+data:extend {{
+    type = "technology",
+    name = "maraxsis-pressure-dome-large",
+    icon = "__maraxsis__/graphics/technology/pressure-dome-big.png",
+    icon_size = 256,
+    effects = {
+        {type = "unlock-recipe", recipe = "maraxsis-pressure-dome-large"},
+    },
+    prerequisites = {"maraxsis-nickel-processing"},
+    unit = {
+        count = 500,
+        ingredients = {
+            {"automation-science-pack", 1},
+            {"logistic-science-pack",   1},
+            {"chemical-science-pack",   1},
+            {"production-science-pack", 1},
+            {"utility-science-pack",    1},
+            {"hydraulic-science-pack",  1},
+        },
+        time = 30,
+    },
+    order = "ex[maraxsis]-d[pressure-dome-large]",
+}}

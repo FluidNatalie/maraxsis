@@ -34,13 +34,17 @@ data:extend {{
 }}
 
 for _,dome in pairs(maraxsis_constants.PRESSURE_DOMES) do
-    table.insert(data.raw.technology["maraxsis-glassworking"].effects,
-    {
-        type = "unlock-recipe",
-        recipe = dome.recipe
-    }
-)
+    --- Domes that carry their own technology (the big dome) are unlocked
+    --- there instead of here.
+    if not dome.technology then
+        table.insert(data.raw.technology["maraxsis-glassworking"].effects,
+        {
+            type = "unlock-recipe",
+            recipe = dome.recipe
+        }
+    )
 
+    end
 end
 
 --table.insert(data.raw.technology["maraxsis-glassworking"].effects, {effect = "unlock-recipe", recipe = recipe.name})
