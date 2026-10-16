@@ -9,19 +9,28 @@
 # Green pixels are found by hue and turned into purple, so the reds, oranges,
 # blues and greys of the pumpjack sprites survive untouched. Saturation,
 # lightness and alpha are preserved, and hues outside the green band come out
-# unchanged. Running it twice therefore changes almost nothing: once the greens
-# have moved into the purple band there is nothing left in the green band.
+# unchanged.
+#
+# The lower edge fades in over many degrees on purpose: the yellow-green
+# highlights sit just above src_lo and would otherwise jump straight from
+# yellow-green to purple. A long lo_feather blends them into a yellow-purple
+# that eases the transition. Because those pixels are only partly shifted they
+# stay in the source band, so run this on the original green sprites rather than
+# on an already-shifted copy (a second pass would push them further purple).
 #
 # With no arguments, the forked big pumpjack graphics (relative to this script)
 # are processed in place.
 
 # Hue band (degrees) that counts as "green", and the purple band it maps onto.
-# A soft FEATHER-degree edge avoids a hard seam at the edges of the shift.
-src_lo=50
+# Each edge fades out over its own number of degrees, which avoids a hard seam.
+# lo_feather is much wider than hi_feather so that the yellow-green highlights
+# (hues just above src_lo) fade gradually into purple instead of snapping to it.
+src_lo=35
 src_hi=135
 dst_lo=255
 dst_hi=305
-feather=16
+lo_feather=45
+hi_feather=16
 
 # ImageMagick per-pixel function operating on the hue channel of an HSL image
 # (u is the hue as a 0..1 fraction of the colour wheel; hlo/hhi/tlo/thi are the
@@ -33,9 +42,9 @@ remap="hlo=$src_lo/360; hhi=$src_hi/360; tlo=$dst_lo/360; thi=$dst_hi/360;"
 remap+=" frac=(u-hlo)/(hhi-hlo); frac=frac<0?0:(frac>1?1:frac);"
 remap+=" tlo+frac*(thi-tlo)"
 
-mask="hlo=$src_lo/360; hhi=$src_hi/360; band=$feather/360;"
-mask+=" ra=(u-hlo)/band; ra=ra<0?0:(ra>1?1:ra); ra=ra*ra*(3-2*ra);"
-mask+=" rb=(u-hhi)/band; rb=rb<0?0:(rb>1?1:rb); rb=rb*rb*(3-2*rb);"
+mask="hlo=$src_lo/360; hhi=$src_hi/360; wlo=$lo_feather/360; whi=$hi_feather/360;"
+mask+=" ra=(u-hlo)/wlo; ra=ra<0?0:(ra>1?1:ra); ra=ra*ra*(3-2*ra);"
+mask+=" rb=(u-hhi)/whi; rb=rb<0?0:(rb>1?1:rb); rb=rb*rb*(3-2*rb);"
 mask+=" ra*(1-rb)"
 
 set -euo pipefail
