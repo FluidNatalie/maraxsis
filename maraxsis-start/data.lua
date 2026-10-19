@@ -23,7 +23,7 @@ data:extend {{
         {type = "item", name = "tungsten-ore", amount = 5},
     },
     main_product = "tungsten-ore",
-    allow_recycling = false,
+    auto_recycle = false,
     allow_decomposition = false,
     allow_productivity = false,
     surface_conditions = maraxsis.surface_conditions(),
