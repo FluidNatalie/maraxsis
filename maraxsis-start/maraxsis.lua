@@ -53,7 +53,7 @@ else
 end
 
 
-utils.add_recipes("uranium-processing", {"maraxsis-stone-centrifuging", "uranium-fuel-cell"})
+utils.add_recipes("uranium-processing", {"uranium-fuel-cell"})
 utils.add_recipes("planet-discovery-nauvis", {"burner-mining-drill"})
 utils.add_recipes("tree-seeding", {"small-electric-pole", "wooden-chest"})
 utils.add_recipes("advanced-material-processing", {"burner-mining-drill"})
@@ -156,10 +156,6 @@ table.insert(data.raw["simple-entity"]["maraxsis-mollusk-husk"].minable.results,
     quality_min = "epic",
     quality_max = "epic"
 })
-
--- increase the yield of the stone centrifuging recipe by 10x.
-data.raw.recipe["maraxsis-stone-centrifuging"].results[1].independent_probability = 0.1
-data.raw.technology["maraxsis-stone-centrifuging"].hidden = true
 
 data.raw.recipe["small-electric-pole"].enabled = false
 data.raw.recipe["wooden-chest"].enabled = false
