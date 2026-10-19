@@ -26,6 +26,7 @@ data:extend {{
     allow_recycling = false,
     allow_decomposition = false,
     allow_productivity = false,
+    surface_conditions = maraxsis.surface_conditions(),
 }}
 
 data:extend {{
@@ -48,6 +49,7 @@ data:extend {{
     always_show_made_in = true,
     localised_name = {"item-name.carbon-fiber"},
     auto_recycle = false,
+    surface_conditions = maraxsis.surface_conditions(),
 }}
 
 -- Starting on Maraxsis changes what the foundry and lubricant technologies do
