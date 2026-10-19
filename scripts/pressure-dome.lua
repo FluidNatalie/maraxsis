@@ -595,7 +595,9 @@ local function check_can_build_dome(surface, position, dome_prototype)
                 or tile.collides_with(maraxsis_trench_entrance_collision_mask)
 
             if tile_collision and is_point_in_polygon(xx - x + 0.5, yy - y,dome_prototype) then
-                return false, colliding_entities, {"cant-build-reason.entity-in-the-way", tile.prototype.localised_name}, true
+                -- The problem here is the terrain, not an entity. Say so, otherwise
+                -- the tile's name (ex: "Deepsea geothermal vent") reads like an entity.
+                return false, colliding_entities, {"cant-build-reason.cant-build-on-tile", tile.prototype.localised_name}, true
             end
         end
     end
@@ -604,6 +606,49 @@ local function check_can_build_dome(surface, position, dome_prototype)
         return false, colliding_entities, error_message
     else
         return true, contained_entities, nil
+    end
+end
+
+--- Whether the given tile prevents the pressure dome from being built, but can
+--- be paved over with foundation. Only lava qualifies; other invalid terrain
+--- (such as the trench entrance) cannot be fixed with foundation.
+--- @param tile LuaTile
+local function tile_needs_foundation(tile)
+    return tile.collides_with(maraxsis_lava_collision_mask)
+end
+
+--- Places foundation ghosts on the lava underneath a pressure dome ghost so that
+--- the dome can actually be constructed. This happens when a pressure dome is
+--- placed with shift held, which places a ghost instead of cancelling the build.
+--- @param surface LuaSurface
+--- @param position MapPosition
+--- @param dome_prototype table
+--- @param force LuaForce
+--- @param player LuaPlayer?
+local function place_foundation_ghosts(surface, position, dome_prototype, force, player)
+    if not surface.valid then return end
+    local x, y = position.x, position.y
+    -- The engine's lava rule covers the dome's collision box, a 32x32 square that
+    -- is slightly larger than the octagon floor. Cover that whole square, because
+    -- the corners may need foundation too.
+    local half_size = math.floor(dome_prototype.octagon_size)
+
+    for xx = x - half_size - 1, x + half_size do
+        for yy = y - half_size - 1, y + half_size do
+            local tile = surface.get_tile(xx, yy)
+            if not tile_needs_foundation(tile) then goto continue end
+            if tile.has_tile_ghost(force) then goto continue end
+
+            surface.create_entity {
+                name = "tile-ghost",
+                inner_name = "foundation",
+                position = {xx, yy},
+                force = force,
+                player = player,
+            }
+
+            ::continue::
+        end
     end
 end
 
@@ -725,7 +770,21 @@ end
 
 maraxsis.on_event(maraxsis.events.on_built(), function(event)
     local entity = event.entity
-    if not entity.valid or not domes[entity.name] then return end
+    if not entity.valid then return end
+
+    -- Placing a pressure dome with shift held places a ghost instead of a real
+    -- entity. Pave over the lava underneath with foundation ghosts so that the
+    -- dome can actually be constructed.
+    if entity.name == "entity-ghost" then
+        local ghost_dome_prototype = entity.ghost_name and domes[entity.ghost_name]
+        if not ghost_dome_prototype then return end
+        if not maraxsis_constants.MARAXSIS_SURFACES[entity.surface.name] then return end
+        local player = event.player_index and game.get_player(event.player_index)
+        place_foundation_ghosts(entity.surface, entity.position, ghost_dome_prototype, entity.force, player)
+        return
+    end
+
+    if not domes[entity.name] then return end
     local prototype_name = entity.name
     local dome_prototype = domes[entity.name]
     local player = event.player_index and game.get_player(event.player_index)

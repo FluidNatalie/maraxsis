@@ -1,4 +1,57 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.40.7
+Date: 2026-10-19
+  Compatibility:
+    - All standard mining drills from all mods can now be used as sand extractors.
+    - Sand extractor scripting offloaded to PlanetsLib. PlanetsLib version bumped to 2.1.0.
+---------------------------------------------------------------------------------------------------
+Version: 1.40.6
+Date: 2026-10-18
+  Balancing:
+    - Removed "coal liquefaction" from project seadragon tech requirements.
+    - The "bio oil" recipe now returns heavy oil instead of light oil. It can also now be additionally performed inside a chemical reactor. Removed petroleum gas cracking to heavy oil.
+---------------------------------------------------------------------------------------------------
+Version: 1.40.5
+Date: 2026-10-18
+  Balancing:
+    - Salt requirement in the hydraulic science recipe is changed from -1 quality to +1 quality.
+---------------------------------------------------------------------------------------------------
+Version: 1.40.4
+Date: 2026-10-18
+  Balancing:
+    - Increased the max health of Conduit to 300. Increased the heating energy to 1 MW.
+  Bugfixes:
+    - Adjusted scaling of conduit effectiveness to simplify estimations of overall effectiveness.. https://github.com/FluidNatalie/maraxsis/issues/34
+---------------------------------------------------------------------------------------------------
+Version: 1.40.3
+Date: 2026-10-18
+  Bugfixes:
+    - Stop Maraxsis Start from overwriting vanilla foundry/lubricant descriptions
+  Changes:
+    - Switched oversized steam turbines to be "generator" prototype instead of "fusion-generator".
+---------------------------------------------------------------------------------------------------
+Version: 1.40.2
+Date: 2026-10-18
+  Bugfixes:
+    - Fixed that the 5x robot energy usage did not apply in the trench.
+---------------------------------------------------------------------------------------------------
+Version: 1.40.1
+Date: 2026-10-17
+  Bugfixes:
+    - Shift-placing pressure domes on lava places foundation ghosts on the lava. https://github.com/FluidNatalie/maraxsis/issues/22
+  Locale:
+    - Changed warning message when a tile(eg. lava) conflicts with placing the pressure dome. https://github.com/FluidNatalie/maraxsis/issues/22
+---------------------------------------------------------------------------------------------------
+Version: 1.40.0
+Date: 2026-10-17
+  Features:
+    - bundle Maraxsis Start as an Any Planet Start option
+---------------------------------------------------------------------------------------------------
+Version: 1.39.23
+Date: 2026-10-17
+  Bugfixes:
+    - Blocked productivity on atmosphere barrelling recipes
+---------------------------------------------------------------------------------------------------
 Version: 1.39.22
 Date: 2026-10-15
   Bugfixes:

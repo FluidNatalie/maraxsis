@@ -20,7 +20,7 @@ require "prototypes.entity.coral"
 require "prototypes.entity.offshore-pump"
 require "prototypes.entity.hydro-plant"
 require "prototypes.entity.sonar"
-require "prototypes.entity.sand-extractor"
+require "prototypes.recipe.sand-extraction"
 require "prototypes.entity.conduit"
 require "prototypes.entity.oversized-steam-turbine"
 require "prototypes.entity.geothermal-generator"
@@ -41,6 +41,7 @@ require "prototypes.technology.omega-3"
 require "prototypes.technology.stone-centrifuging"
 require "prototypes.technology.nickel"
 require "prototypes.technology.deepsea-research"
+require "prototypes.fluid.supercritical-steam"
 require "prototypes.recipe.recipes"
 
 require "prototypes.circuit-connector-definitions"
@@ -53,7 +54,21 @@ require "prototypes.music"
 require "prototypes.tips-and-tricks"
 
 require "compat.krastorio-2"
- 
-data.raw["mining-drill"]["burner-mining-drill"].maraxsis_buildability_rules = {water = false, dome = false, coral = false, trench = false, trench_entrance = false, trench_lava = false}
-data.raw["assembling-machine"]["chemical-plant"].maraxsis_buildability_rules = {water = true, dome = true, coral = true, trench = true, trench_entrance = false, trench_lava = false}
-data.raw["electric-energy-interface"]["electric-energy-interface"].maraxsis_buildability_rules = {water = true, dome = true, coral = true, trench = true, trench_entrance = false, trench_lava = false}
+
+data.raw["mining-drill"]["burner-mining-drill"].maraxsis_buildability_rules = { water = false, dome = false, coral = false, trench = false, trench_entrance = false, trench_lava = false }
+data.raw["assembling-machine"]["chemical-plant"].maraxsis_buildability_rules = { water = true, dome = true, coral = true, trench = true, trench_entrance = false, trench_lava = false }
+data.raw["electric-energy-interface"]["electric-energy-interface"].maraxsis_buildability_rules = { water = true, dome = true, coral = true, trench = true, trench_entrance = false, trench_lava = false }
+
+-- Any Planet Start integration. Register Maraxsis as a custom starting planet so
+-- any-planet-start runs the maraxsis-start content only when it is selected.
+if mods["any-planet-start"] then
+    APS.add_planet {
+        name = "maraxsis",
+        filename = "__maraxsis__/maraxsis-start/maraxsis.lua",
+        technology = "planet-discovery-maraxsis",
+    }
+
+    if settings.startup["aps-planet"] and settings.startup["aps-planet"].value == "maraxsis" then
+        require "maraxsis-start.data"
+    end
+end
