@@ -17,6 +17,16 @@ data:extend {{
     ]]
 }}
 
+--- The wall rocks where you can place pipes and belts but no domes. Delineates
+--- the buildable and unbuildable areas in the trench.
+data:extend {{
+    type = "noise-expression",
+    name = "maraxsis_trench_wall_rocks",
+    expression = [[
+        maraxsis_trench_elevation >= 0.028
+    ]]
+}}
+
 data:extend {{
     type = "noise-expression",
     name = "maraxsis_lava_master",
@@ -170,7 +180,9 @@ data.raw["simple-entity"]["maraxsis-lava-lamp"].autoplace = {
 
 data.raw["simple-entity"]["maraxsis-trench-wall-collisionless"].autoplace = {
     probability_expression = [[
-        maraxsis_3x3_grid * (maraxsis_trench_elevation < ]] .. (TRENCH_ENTRANCE_ELEVATION + 0.02) .. [[) * (maraxsis_trench_elevation >= 0.028)
+        maraxsis_3x3_grid
+        * maraxsis_trench_wall_rocks
+        * (maraxsis_trench_elevation < ]] .. (TRENCH_ENTRANCE_ELEVATION + 0.02) .. [[)
     ]],
     order = "b[lava]-a[maraxsis]"
 }
@@ -201,9 +213,190 @@ data.raw.tile["volcanic-folds-underwater"].autoplace = {
     order = "e[tile]-a[maraxsis]"
 }
 
+data.raw.tile["maraxsis-fertile-trench-floor"].autoplace = {
+    probability_expression = [[
+        2 * maraxsis_trench_wall * maraxsis_wyrm_path * (1 - maraxsis_hot_lava)
+    ]],
+    order = "e[tile]-b[maraxsis]"
+}
+
+--- Places coral and polylplasts on the matriarch paths.
+for i, spec in pairs {
+    {
+        prototype = data.raw.tree["maraxsis-trench-polylplast"],
+        probability = maraxsis_constants.WYRM_PATH_POLYLPLAST_PROBABILITY,
+    },
+    {
+        prototype = data.raw["simple-entity"]["maraxsis-trench-coral-animation"],
+        probability = maraxsis_constants.WYRM_PATH_CORAL_PROBABILITY,
+    },
+} do
+    spec.prototype.autoplace = {
+        tile_restriction = {"maraxsis-fertile-trench-floor"},
+        probability_expression = [[
+            (1 - maraxsis_trench_wall_rocks) *
+            (random_penalty{
+                x = x + ]] .. i * 10000 .. [[,
+                y = y,
+                seed = map_seed,
+                source = 1,
+                amplitude = 1
+            } > ]] .. (1 - spec.probability) .. [[)
+        ]],
+    }
+end
 data.raw["simple-entity"]["maraxsis-chimney"].autoplace = {
     probability_expression = [[
         maraxsis_trench_wall * maraxsis_3x3_grid * (random_penalty{x = x, y = y, seed = map_seed, source = 1, amplitude = 1} > 0.995)
     ]],
     order = "f[entity]-a[chimney]"
 }
+
+--- How far from a border each band of the path reaches.
+local PATH_CENTER_REACH = "(" .. (maraxsis_constants.WYRM_PATH_WIDTH - maraxsis_constants.WYRM_PATH_1_3_FADE - maraxsis_constants.WYRM_PATH_2_3_FADE) .. " + maraxsis_wyrm_path_wobble)"
+local PATH_MIDDLE_REACH = "(" .. (maraxsis_constants.WYRM_PATH_WIDTH - maraxsis_constants.WYRM_PATH_1_3_FADE) .. " + maraxsis_wyrm_path_wobble)"
+local PATH_OUTER_REACH = "(" .. maraxsis_constants.WYRM_PATH_WIDTH .. " + maraxsis_wyrm_path_wobble)"
+
+-- Wyrm matriarch territories, the same as Vulcanus's demolisher territories
+data:extend {
+    {
+        type = "noise-expression",
+        name = "maraxsis_wyrm_matriarch_territory_radius",
+        expression = maraxsis_constants.WYRM_MATRIARCH_TERRITORY_RADIUS,
+    },
+    {
+        type = "noise-expression",
+        name = maraxsis_constants.WYRM_MATRIARCH_TERRITORY_EXPRESSION,
+        expression = [[
+            voronoi_cell_id{
+                x = x + 1000 * maraxsis_wyrm_matriarch_territory_radius,
+                y = y + 1000 * maraxsis_wyrm_matriarch_territory_radius,
+                seed0 = map_seed,
+                seed1 = 0,
+                grid_size = maraxsis_wyrm_matriarch_territory_radius,
+                distance_type = 'manhattan',
+                jitter = 1
+            } - maraxsis_wyrm_matriarch_starting_area
+        ]],
+    },
+    {
+        --- The territory a point belongs to. Comparing a point's territory with
+        --- its neighbors' is how we find the borders between them.
+        type = "noise-function",
+        name = "maraxsis_wyrm_territory_at",
+        expression = [[
+            voronoi_cell_id{
+                x = x + dx + 1000 * maraxsis_wyrm_matriarch_territory_radius,
+                y = y + dy + 1000 * maraxsis_wyrm_matriarch_territory_radius,
+                seed0 = map_seed,
+                seed1 = 0,
+                grid_size = maraxsis_wyrm_matriarch_territory_radius,
+                distance_type = 'manhattan',
+                jitter = 1
+            }
+        ]],
+        parameters = {"dx", "dy"},
+    },
+    {
+        --- 1 where any neighbor a given reach away sits in another territory.
+        type = "noise-function",
+        name = "maraxsis_wyrm_border_within",
+        expression = [[
+            min(1,
+                (maraxsis_wyrm_territory_at(reach, 0) != here) +
+                (maraxsis_wyrm_territory_at(-reach, 0) != here) +
+                (maraxsis_wyrm_territory_at(0, reach) != here) +
+                (maraxsis_wyrm_territory_at(0, -reach) != here) +
+                (maraxsis_wyrm_territory_at(reach, reach) != here) +
+                (maraxsis_wyrm_territory_at(reach, -reach) != here) +
+                (maraxsis_wyrm_territory_at(-reach, reach) != here) +
+                (maraxsis_wyrm_territory_at(-reach, -reach) != here)
+            )
+        ]],
+        local_expressions = {
+            here = "maraxsis_wyrm_territory_at(0, 0)",
+        },
+        parameters = {"reach"},
+    },
+    {
+        --- The paths the matriarchs keep to: a ring inset from the borders of their territory.
+        type = "noise-expression",
+        name = "maraxsis_wyrm_path",
+        expression = [[
+            (center + middle + outer) / 3 > maraxsis_wyrm_path_patches
+        ]],
+        local_expressions = {
+            --- Main band, all fertile.
+            center = [[
+                maraxsis_wyrm_border_within(]] .. PATH_CENTER_REACH .. [[)
+            ]],
+            --- Middle band with 2/3rds fertile tiles.
+            middle = [[
+                maraxsis_wyrm_border_within(]] .. PATH_MIDDLE_REACH .. [[)
+            ]],
+            --- Outer band with 1/3rd the fertile tiles.
+            outer = [[
+                maraxsis_wyrm_border_within(]] .. PATH_OUTER_REACH .. [[)
+            ]],
+        },
+    },
+    {
+        --- Makes the edge of the fertile zone be wavy instead of straight.
+        type = "noise-expression",
+        name = "maraxsis_wyrm_path_wobble",
+        expression = [[
+            ]] .. maraxsis_constants.WYRM_PATH_WOBBLE .. [[ * basis_noise{
+                x = x,
+                y = y,
+                seed0 = map_seed,
+                seed1 = 'maraxsis_wyrm_path_wobble',
+                input_scale = 1/]] .. maraxsis_constants.WYRM_PATH_WOBBLE_LENGTH .. [[,
+                output_scale = 1
+            }
+        ]],
+    },
+    {
+        --- Noise mask we use to make the path progressively faded.
+        type = "noise-expression",
+        name = "maraxsis_wyrm_path_patches",
+        expression = [[
+            clamp(0.5 + 0.5 * basis_noise{
+                x = x,
+                y = y,
+                seed0 = map_seed,
+                seed1 = 'maraxsis_wyrm_path_patches',
+                input_scale = 1/]] .. maraxsis_constants.WYRM_PATH_EDGE_GRAIN .. [[,
+                output_scale = 1
+            }, 0.01, 0.99)
+        ]],
+    },
+    {
+        --- The territory a path tile is in.
+        type = "noise-expression",
+        name = "maraxsis_wyrm_path_territory",
+        expression = "maraxsis_wyrm_territory_at(0, 0)",
+    },
+    {
+        type = "noise-expression",
+        name = "maraxsis_wyrm_matriarch_starting_area",
+        expression = "distance < 7 * 32",
+    },
+    {
+        type = "noise-expression",
+        name = "maraxsis_wyrm_matriarch_variation_expression",
+        expression = "floor(clamp(distance / (18 * 32) - 0.25, 0, 4)) + (-99 * no_enemies_mode)", -- negative number means no matriarch
+    },
+}
+
+local PATH_REACHES = {center = PATH_CENTER_REACH, middle = PATH_MIDDLE_REACH, outer = PATH_OUTER_REACH}
+for band, names in pairs(maraxsis_constants.WYRM_PATH_BAND_TERRITORIES) do
+    local reach = PATH_REACHES[band]
+    for direction, name in pairs(names) do
+        local d = maraxsis_constants.WYRM_PATH_DIRECTIONS[direction]
+        data:extend {{
+            type = "noise-expression",
+            name = name,
+            expression = "maraxsis_wyrm_territory_at(" .. d[1] .. " * " .. reach .. ", " .. d[2] .. " * " .. reach .. ")",
+        }}
+    end
+end
