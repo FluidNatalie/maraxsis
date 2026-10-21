@@ -41,6 +41,7 @@ require "prototypes.technology.omega-3"
 require "prototypes.technology.stone-centrifuging"
 require "prototypes.technology.nickel"
 require "prototypes.technology.deepsea-research"
+require "prototypes.technology.water-treatment-2"
 require "prototypes.fluid.supercritical-steam"
 require "prototypes.recipe.recipes"
 

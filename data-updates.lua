@@ -156,6 +156,12 @@ end
 add_quality_factoriopedia_info(data.raw["roboport"]["maraxsis-regulator"], regulator_consumption_factoriopedia_info(1))
 add_quality_factoriopedia_info(data.raw["roboport"]["maraxsis-big-regulator"], regulator_consumption_factoriopedia_info(2))
 
+data.raw.recipe["maraxsis-spent-electrode-recycling"].energy_required = 0.5
+data.raw.recipe["maraxsis-spent-electrode-recycling"].results = table.deepcopy(data.raw.recipe["maraxsis-electrode"].ingredients)
+for _, result in pairs(data.raw.recipe["maraxsis-spent-electrode-recycling"].results) do
+    result.independent_probability = 0.25
+end
+
 if mods["any-planet-start"] and settings.startup["aps-planet"] and settings.startup["aps-planet"].value == "maraxsis" then
     require "maraxsis-start.data-updates"
 end
