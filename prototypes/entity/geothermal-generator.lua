@@ -1,35 +1,35 @@
 local constants = require "__FluidMustFlow__.prototypes.constants"
 local hit_effects = require("__base__.prototypes.entity.hit-effects")
 
-data:extend {{
+data:extend { {
     type = "item",
     name = "maraxsis-geothermal-generator",
     icon = "__maraxsis__/graphics/entity/geothermal-generator/icon.png",
     icon_size = 64,
     place_result = "maraxsis-geothermal-generator",
     stack_size = 5,
-}}
+} }
 
-data:extend {{
+data:extend { {
     type = "recipe",
     name = "maraxsis-geothermal-generator",
     enabled = false,
     energy_required = 10,
     ingredients = {
-        {type = "item",  name = "maraxsis-glass-panes",    amount = 200},
-        {type = "item",  name = "tungsten-plate",          amount = 50},
-        {type = "item",  name = "processing-unit",         amount = 25},
-        {type = "item",  name = "maraxsis-trench-duct",         amount = 1},
+        { type = "item", name = "maraxsis-glass-panes", amount = 200 },
+        { type = "item", name = "tungsten-plate",       amount = 50 },
+        { type = "item", name = "processing-unit",      amount = 25 },
+        { type = "item", name = "maraxsis-trench-duct", amount = 1 },
     },
     results = {
-        {type = "item", name = "maraxsis-geothermal-generator", amount = 1},
+        { type = "item", name = "maraxsis-geothermal-generator", amount = 1 },
     },
     auto_recycle = true,
     categories = { "maraxsis-hydro-plant" },
     surface_conditions = maraxsis.surface_conditions(),
-}}
+} }
 
-data:extend {{
+data:extend { {
     type = "technology",
     name = "maraxsis-geothermal-energy",
     icon = "__maraxsis__/graphics/entity/geothermal-generator/technology.png",
@@ -56,18 +56,18 @@ data:extend {{
             recipe = "maraxsis-geothermal-sulfur"
         },
     },
-    prerequisites = {"ducts", "maraxsis-glassworking"},
+    prerequisites = { "ducts", "maraxsis-glassworking" },
     research_trigger = {
         type = "build-entity",
         entity = "maraxsis-trench-duct"
     },
     order = "d-e",
-}}
+} }
 
-data:extend {{
+data:extend { {
     type = "recipe-category",
     name = "maraxsis-geothermal-generator"
-}}
+} }
 
 local working_visualisations = {
     {
@@ -173,9 +173,9 @@ data:extend { {
     localised_description = localised_description,
     heating_energy = "2000kW",
     module_slots = 5,
-    icons_positioning = {{
+    icons_positioning = { {
         inventory_index = defines.inventory.crafter_modules, shift = { 0, 1 }
-    }},
+    } },
     use_mirroring = true,
     allowed_effects = { "consumption", "speed", "productivity", "pollution", "quality" },
     water_reflection = require("__space-age__.prototypes.entity.electromagnetic-plant-pictures").water_reflection,
@@ -194,7 +194,7 @@ data:extend { {
                 { connection_category = "ducts", direction = defines.direction.south, flow_direction = "input-output", position = { 0, 2.5 } },
             },
             max_pipeline_extent = constants.extent,
-            secondary_draw_orders = {north = -1, west = -1, east = -1},
+            secondary_draw_orders = { north = -1, west = -1, east = -1 },
         },
         {
             production_type = "input",
@@ -205,7 +205,7 @@ data:extend { {
                 { connection_category = "ducts", direction = defines.direction.north, flow_direction = "input-output", position = { 0, -2.5 } },
             },
             max_pipeline_extent = constants.extent,
-            secondary_draw_orders = {north = -1, west = -1, east = -1},
+            secondary_draw_orders = { north = -1, west = -1, east = -1 },
         },
         {
             production_type = "output",
@@ -216,7 +216,7 @@ data:extend { {
                 { connection_category = "ducts", direction = defines.direction.east, flow_direction = "input-output", position = { 2.5, 0 } }
             },
             max_pipeline_extent = constants.extent,
-            secondary_draw_orders = {north = -1, west = -1, east = -1},
+            secondary_draw_orders = { north = -1, west = -1, east = -1 },
         },
         {
             production_type = "output",
@@ -227,7 +227,7 @@ data:extend { {
                 { connection_category = "ducts", direction = defines.direction.west, flow_direction = "input-output", position = { -2.5, 0 } },
             },
             max_pipeline_extent = constants.extent,
-            secondary_draw_orders = {north = -1, west = -1, east = -1},
+            secondary_draw_orders = { north = -1, west = -1, east = -1 },
         },
     },
     perceived_performance = { minimum = 0.25, performance_to_activity_rate = 20.0, maximum = 5 },
@@ -255,57 +255,3 @@ data:extend { {
         },
     },
 } }
-
-data:extend {{
-    type = "fluid",
-    name = "maraxsis-supercritical-steam",
-    icon = "__maraxsis__/graphics/icons/supercritical-steam.png",
-    icon_size = 64,
-    default_temperature = 20000,
-    max_temperature = 20000,
-    heat_capacity = (225 / 6525) .. "kJ",
-    base_flow_rate = data.raw.fluid.steam.base_flow_rate,
-    base_color = {1, 0.5, 0.5},
-    flow_color = {1, 0.5, 0.75},
-    gas_temperature = 365,
-    auto_barrel = false,
-    fuel_value = "1J"
-}}
-
-data:extend {{
-    type = "recipe",
-    name = "maraxsis-supercritical-steam",
-    enabled = false,
-    energy_required = 2,
-    ingredients = {
-        {type = "fluid", name = "water", amount = 80, fluidbox_index = 0, optional_fluidbox_indexes = {1}},
-        {type = "item", name = "pipe", amount = 1},
-    },
-    results = {
-        {type = "fluid", name = "maraxsis-supercritical-steam", amount = 80}
-    },
-    allow_productivity = false,
-    allow_quality = false,
-    auto_recycle = false,
-    categories = { "maraxsis-geothermal-generator"},
-}}
-
-data:extend {{
-    type = "recipe",
-    name = "maraxsis-supercritical-steam-cooling",
-    enabled = false,
-    energy_required = 1,
-    icon = "__maraxsis__/graphics/icons/supercritical-steam-cooling.png",
-    ingredients = {
-        {type = "fluid", name = "maraxsis-supercritical-steam", amount = 50},
-        {type = "fluid", name = "fluoroketone-cold", amount = 10},
-    },
-    results = {
-        {type = "fluid", name = "steam", amount = 500, temperature = 500},
-        {type = "fluid", name = "fluoroketone-hot", amount = 10, ignored_by_stats = 10, ignored_by_productivity = 10},
-    },
-    allow_productivity = false,
-    allow_quality = false,
-    auto_recycle = false,
-    categories = {"cryogenics"},
-}}

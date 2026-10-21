@@ -161,7 +161,7 @@ end)
 
 
 local function change_breath_amount_by(player, amount,has_abyssal_gear)
-    local breath = storage.breath[player.index]
+    local breath = storage.breath[player.index] or FULL_BREATH_NUM_TICKS
     if not amount then return end
     local delta = UPDATE_RATE * amount
     if not amount then return end
@@ -178,7 +178,7 @@ local function change_breath_amount_by(player, amount,has_abyssal_gear)
 end
 
 maraxsis.on_nth_tick(UPDATE_RATE, function()
-    for _, player in pairs(game.connected_players) do
+    for unit_number, player in pairs(game.connected_players) do
         local character = player.character
         if not character then goto continue end
         local position = character.position
@@ -278,7 +278,7 @@ maraxsis.on_event({
         [defines.events.script_raised_teleported] = "carry",
         [defines.events.on_player_died] = 0,
         [defines.events.on_player_respawned] = 0.25,
-        [defines.events.on_player_created] = 0,
+        [defines.events.on_player_created] = 1,
         [defines.events.on_player_controller_changed] = "carry",
         [defines.events.on_player_toggled_map_editor] = 1,
     }

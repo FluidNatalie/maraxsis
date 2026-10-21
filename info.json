@@ -4,15 +4,17 @@
   "description": "Dive into the uncharted waters of Maraxsis, a world where the sea covers everything. Utilize submarines to explore, craft advanced fluids inside the hydro plant, build pressure domes, and master the challenges of deep-sea logistics.",
   "author": "notnotmelon, FluidNatalie, MeteorSwarm, Kryzeth",
   "homepage": "https://github.com/FluidNatalie/maraxsis",
-  "version": "1.39.22",
+  "version": "1.40.7",
   "factorio_version": "2.1",
   "dependencies": [
     "base >= 2.1.22",
     "space-age >= 2.1.9",
     "quality >= 2.1.9",
-    "PlanetsLib >= 1.20.3",
+    "PlanetsLib >= 2.1.0",
     "SpidertronPatrols >= 2.7.0",
     "FluidMustFlow >= 1.5.0",
+    "? any-planet-start >= 1.1.20",
+    "! maraxsis-start",
     "? Krastorio2-spaced-out",
     "(?) tenebris",
     "(?) tenebris-prime",
@@ -29,5 +31,6 @@
   "spoiling_required": true,
   "freezing_required": true,
   "segmented_units_required": true,
-  "expansion_shaders_required": true
+  "expansion_shaders_required": true,
+  "rail_bridges_required": true
 }

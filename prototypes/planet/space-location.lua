@@ -4,23 +4,25 @@ require "trench-noise-expressions"
 local asteroid_util = require "__space-age__.prototypes.planet.asteroid-spawn-definitions"
 local planet_map_gen = require "map-gen"
 
-PlanetsLib:extend{
+local surface_properties = {
+    ["day-night-cycle"] = 5 * minute,
+    ["magnetic-field"] = 25,
+    ["solar-power"] = 50,
+    ["robot-energy-usage"] = 5,
+    pressure = 200000,
+    gravity = 20,
+}
+
+PlanetsLib:extend {
     type = "planet",
     name = "maraxsis",
     starting_area = 1,
-    surface_properties = {
-        ["day-night-cycle"] = 5 * minute,
-        ["magnetic-field"] = 25,
-        ["solar-power"] = 50,
-        ["robot-energy-usage"] = 5,
-        pressure = 200000,
-        gravity = 20,
-    },
+    surface_properties = table.deepcopy(surface_properties),
     is_satellite = false,
     orbit = {
         distance = 17.5,
         orientation = 0.515,
-        parent = {type = "space-location", name = "star"}
+        parent = { type = "space-location", name = "star" }
     },
     starmap_icon = "__maraxsis__/graphics/planets/maraxsis-starmap-icon.png",
     starmap_icon_size = 512,
@@ -97,24 +99,20 @@ PlanetsLib:extend{
     }
 }
 
+surface_properties["pressure"] = 800000
+surface_properties["solar-power"] = 0
 
 data:extend { maraxsis.merge(data.raw.planet.gleba, {
     name = "maraxsis-trench",
     starting_area = 1,
-    surface_properties = {
-        ["day-night-cycle"] = 5 * minute,
-        ["magnetic-field"] = 25,
-        ["solar-power"] = 0,
-        pressure = 800000,
-        gravity = 20,
-    },
+    surface_properties = table.deepcopy(surface_properties),
     hidden = true,
     icon = "__maraxsis__/graphics/planets/maraxsis-trench.png",
     icon_size = 256,
     order = "ce[maraxsis]-[trench]",
     pollutant_type = "nil",
     draw_orbit = false,
-    solar_power_in_space = 150,
+    solar_power_in_space = 0,
     map_gen_settings = planet_map_gen["maraxsis-trench"](),
     distance = 15.6,
     label_orientation = 0.3,
@@ -123,7 +121,6 @@ data:extend { maraxsis.merge(data.raw.planet.gleba, {
     orientation = 0.5,
     auto_save_on_first_trip = false,
     asteroid_spawn_definitions = "nil",
-    flying_robot_energy_usage_multiplier = 1.5, -- todo: this doesnt work
 }) }
 
 data:extend { {

@@ -57,12 +57,14 @@ data:extend {{
 local total = 0
 local profile = {}
 for i = 1, 5000 do
-    total = total + (2 ^ (-i + 1))
-    profile[i] = total / i * 2 / 3
+    total = total + (0.5 * 2 ^ (-i + 2))
+    profile[i] = total / i
 end
 
 data:extend {maraxsis.merge(data.raw.beacon.beacon, {
     name = "maraxsis-conduit",
+    max_health = 300,
+    heating_energy = "1.0MW",
     minable = {mining_time = 0.3, result = "maraxsis-conduit"},
     maraxsis_buildability_rules = {water = true, dome = true, coral = true, trench = true, trench_entrance = false, trench_lava = false},
     graphics_set = {

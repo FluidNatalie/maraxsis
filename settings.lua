@@ -26,3 +26,9 @@ data:extend {{
     forced_value = true,
 }}
 
+-- Offer Maraxsis as a starting planet for Any Planet Start. The inverted tech
+-- tree and the rest of the maraxsis-start content only load when it is picked.
+if mods["any-planet-start"] then
+    require "maraxsis-start.settings"
+end
+
