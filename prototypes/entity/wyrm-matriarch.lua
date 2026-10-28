@@ -1,0 +1,429 @@
+-- BLENDER POST PROCESSING STEPS
+-- 1. ./spritter spritesheet -m 16 -w 8 -a 10 -l --lossy . .
+-- 2. Inner glow. Blending mode normal. Alpha 0.75
+-- 3. Saturation 2
+
+local space_age_sounds = require "__space-age__.prototypes.entity.sounds"
+
+--- Max uint32: https://lua-api.factorio.com/latest/types/uint32.html
+local MAX_UINT32 = 4294967295
+
+local function matriarch_spritesheet(file_name, is_shadow, is_glow, scale, alpha)
+    scale = scale * 2
+    is_shadow = is_shadow or false
+    is_glow = is_glow or false
+    local sprite = util.sprite_load(
+        "__maraxsis__/graphics/entity/wyrm-matriarch/" .. file_name,
+        {
+            direction_count = 128,
+            dice = 0, -- dicing is incompatible with sprite alpha masking, do not attempt
+            draw_as_shadow = is_shadow,
+            draw_as_glow = is_glow,
+            scale = scale,
+            usage = "enemy",
+            blend_mode = "normal",
+            allow_forced_downscale = true,
+            tint = {alpha, alpha, alpha, alpha},
+            middle_orientation = 1,
+        }
+    )
+    if file_name == "matriarch-body-glow" then
+        sprite.filename = "__maraxsis__/graphics/entity/wyrm-matriarch/matriarch-body-glow.png"
+    elseif file_name == "matriarch-head-glow" then
+        sprite.filename = "__maraxsis__/graphics/entity/wyrm-matriarch/matriarch-body-glow.png"
+    elseif file_name == "matriarch-head" or file_name == "matriarch-head-shadow" then
+        sprite.filename = "__maraxsis__/graphics/entity/wyrm-matriarch/matriarch-head.png"
+    elseif file_name == "matriarch-body" or file_name == "matriarch-body-shadow" then
+        sprite.filename = "__maraxsis__/graphics/entity/wyrm-matriarch/matriarch-body.png"
+    end
+    return sprite
+end
+
+local segment_scales = {
+    1.09,
+    1.27,
+    1.36,
+    1.36,
+    1.36,
+    1.36,
+    1.33,
+    1.30,
+    1.37,
+    1.52,
+    1.52,
+    1.40,
+    1.41,
+    1.28,
+    1.28,
+    1.17,
+    1.10,
+    1.08,
+    1.08,
+    1.09,
+    1.20,
+    1.20,
+    1.10,
+    1.10,
+    0.99,
+    0.99,
+    0.99,
+    0.87,
+    0.87,
+    0.97,
+    0.87,
+    0.97,
+    0.99,
+    0.87,
+    0.87,
+    0.87,
+    0.87,
+    0.77,
+    0.77,
+    0.65,
+    0.64,
+}
+
+local function make_segment_name(base_name, scale)
+    return "maraxsis-" .. base_name .. "-x" .. string.gsub(tostring(scale), "%.", "_")
+end
+
+local resistances = {
+    {
+        type = "explosion",
+        percent = 60,
+    },
+    {
+        type = "physical",
+        percent = 50,
+    },
+    {
+        type = "fire",
+        percent = 100,
+    },
+    {
+        type = "laser",
+        percent = 100,
+    },
+    {
+        type = "impact",
+        percent = 100,
+    },
+    {
+        type = "poison",
+        percent = 10,
+    },
+    {
+        type = "electric",
+        decrease = 20,
+        percent = 20,
+    },
+}
+
+local function make_matriarch_segment_specifications(base_name, segment_scales, scale)
+    local specifications = {}
+    local num_segments = #segment_scales
+    for i = 1, num_segments do
+        local segment_scale = segment_scales[i] * scale
+        specifications[i] = {segment = make_segment_name(base_name .. "-segment", segment_scale)}
+    end
+    return specifications
+end
+
+local created_effect = {
+    type = "direct",
+    action_delivery = {
+        type = "instant",
+        source_effects = {
+            {
+                type = "script",
+                effect_id = "maraxsis-wyrm-matriarch-segment-created",
+            },
+        },
+    },
+}
+
+--- The little wyrmling animation. Pointed 8 directions because we don't know
+--- what direction she's going. They wiggle and glow.
+local WYRMLING_CELL = 400
+local WYRMLING_DIRECTIONS = 8
+local WYRMLING_FRAMES = 16
+local WYRMLING_ANIMATION_SPEED = 0.19
+local WYRMLING_SCALE = 0.7
+local WYRMLING_OPACITY = 0.8
+local WYRMLING_TTL = 640
+local WYRMLING_FADE_IN = 180
+local WYRMLING_FADE_AWAY = 120
+
+for direction = 0, WYRMLING_DIRECTIONS - 1 do
+    local animation = {
+        filename = "__maraxsis__/graphics/entity/wyrm-matriarch/wyrmling.png",
+        width = WYRMLING_CELL,
+        height = WYRMLING_CELL,
+        y = direction * WYRMLING_CELL,
+        frame_count = WYRMLING_FRAMES,
+        line_length = WYRMLING_FRAMES,
+        animation_speed = WYRMLING_ANIMATION_SPEED,
+        scale = WYRMLING_SCALE,
+        flags = {"smoke"},
+    }
+
+    data:extend {{
+        type = "trivial-smoke",
+        name = "maraxsis-wyrmling-" .. direction,
+        animation = animation,
+        glow_animation = maraxsis.merge(animation, {
+            filename = "__maraxsis__/graphics/entity/wyrm-matriarch/wyrmling-glow.png",
+            draw_as_glow = true,
+        }),
+        --- Wiggle forever.
+        cyclic = true,
+        movement_slow_down_factor = 1,
+        duration = WYRMLING_TTL,
+        glow_fade_away_duration = WYRMLING_TTL,
+        fade_in_duration = WYRMLING_FADE_IN,
+        fade_away_duration = WYRMLING_FADE_AWAY,
+        color = {WYRMLING_OPACITY, WYRMLING_OPACITY, WYRMLING_OPACITY, WYRMLING_OPACITY},
+    }}
+end
+
+local function make_wyrmling_effects(spread, cooldown)
+    local effects = {}
+    for direction = 0, WYRMLING_DIRECTIONS - 1 do
+        effects[#effects + 1] = {
+            type = "create-trivial-smoke",
+            smoke_name = "maraxsis-wyrmling-" .. direction,
+            probability = 0.035,
+            offset_deviation = {{-spread, -spread}, {spread, spread}},
+            starting_frame_deviation = WYRMLING_FRAMES,
+        }
+    end
+    return {time_cooldown = cooldown, effect = effects}
+end
+
+local function make_matriarch_head(
+    base_name,
+    order,
+    scale,
+    damage_multiplier,
+    health,
+    regen,
+    speed_multiplier,
+    factoriopedia_simulation,
+    sounds,
+    render_layer)
+    return {
+        keep_animation = true, -- TODO: remove
+        name = "maraxsis-" .. base_name,
+        type = "segmented-unit",
+        icon = "__maraxsis__/graphics/entity/wyrm-matriarch/icon.png",
+        flags = {"placeable-player", "placeable-enemy", "placeable-off-grid", "breaths-air", "not-repairable"},
+        max_health = health,
+        factoriopedia_simulation = factoriopedia_simulation,
+        order = order,
+        territory_radius = 10,
+        subgroup = "enemies",
+        resistances = resistances,
+        impact_category = "organic",
+        healing_per_tick = regen,
+        collision_box = {{-3 * scale, -3 * scale}, {3 * scale, 3 * scale}},
+        selection_box = {{-3 * scale, -3 * scale}, {3 * scale, 3 * scale}},
+        drawing_box_vertical_extension = 4.0 * scale,
+        is_military_target = true,
+        vision_distance = 100,
+        -- We don't want her scanning at all, but can't disable it entirely, so
+        -- make it happen once in forever.
+        ticks_per_scan = MAX_UINT32,
+        enraged_duration = 100 * 60,                       -- 100 seconds
+        patrolling_speed = 2.0 * speed_multiplier / 60,    -- 1.5 tiles per second
+        investigating_speed = 4.0 * speed_multiplier / 60, -- 2.25 tiles per second
+        attacking_speed = 9.0 * speed_multiplier / 60,
+        enraged_speed = 9.0 * speed_multiplier / 60,
+        acceleration_rate = 1.3 * speed_multiplier / 60 / 60, -- 1 tile per second per second
+        turn_radius = 26 * scale,                             -- tiles
+        patrolling_turn_radius = 26 * scale,                  -- tiles
+        turn_smoothing = 0.75,                                -- fraction of the total turning range (based on turning radius)
+        roar = {
+            filename = "__maraxsis__/sounds/wyrm-matriarch-roar.ogg",
+            category = "enemy",
+            priority = 127,
+        },
+        roar_probability = sounds.roar_probability,
+        hurt_roar = {
+            filename = "__maraxsis__/sounds/wyrm-matriarch-roar.ogg",
+            category = "enemy",
+            priority = 127,
+        },
+        hurt_thresholds = sounds.hurt_thresholds,
+        working_sound = {
+            sound = {
+                filename = "__space-age__/sound/world/semi-persistent/distant-rumble-2.ogg",
+                volume = 1,
+                audible_distance_modifier = 0.8,
+            },
+            max_sounds_per_prototype = 1,
+            match_volume_to_activity = true,
+        },
+        animation = {
+            layers = {
+                matriarch_spritesheet("matriarch-head", false, false, 0.5 * scale * 0.7, 0.7),
+                matriarch_spritesheet("matriarch-head", false, true, 0.5 * scale * 0.7, 1),
+                matriarch_spritesheet("matriarch-head-shadow", true, false, 0.5 * scale * 0.7, 1.0),
+                --matriarch_spritesheet("matriarch-head-glow", false, true, 0.5 * scale * 0.7, 1.0),
+            },
+        },
+        render_layer = "elevated-rail-metal",
+        segment_engine = {
+            segments = make_matriarch_segment_specifications(base_name, segment_scales, scale),
+        },
+        created_effect = created_effect,
+    }
+end
+
+local function make_matriarch_segment(base_name, scale, damage_multiplier, health, sounds, render_layer)
+    return {
+        keep_animation = true, -- TODO: remove
+        name = make_segment_name(base_name .. "-segment", scale),
+        type = "segment",
+        localised_name = {"entity-name.maraxsis-wyrm-matriarch-segment", {"entity-name.maraxsis-" .. base_name}},
+        --- The default minus "rail". This makes it so submarines can pass through
+        --- her body. Her head needs to continue to be on the rail layer so that
+        --- she can target submarines (if they attack her), so you can technically
+        --- collide with that still.
+        collision_mask = {layers = {player = true, train = true, transport_belt = true, is_object = true}},
+        hidden = true,
+        flags = {"not-repairable", "breaths-air", "not-in-kill-statistics"},
+        max_health = health,
+        impact_category = "organic",
+        resistances = resistances,
+        collision_box = {{-3 * scale, -3 * scale}, {3 * scale, 3 * scale}},
+        selection_box = {{-3 * scale, -3 * scale}, {3 * scale, 3 * scale}},
+        drawing_box_vertical_extension = 4.0 * scale,
+        is_military_target = true,
+        animation = {
+            layers = {
+                matriarch_spritesheet("matriarch-body", false, false, 0.5 * scale, 0.7),
+                matriarch_spritesheet("matriarch-body", false, true, 0.5 * scale, 1),
+                matriarch_spritesheet("matriarch-body-shadow", true, false, 0.5 * scale, 1.0),
+                matriarch_spritesheet("matriarch-body-glow", false, true, 0.5 * scale, 1.0),
+            },
+        },
+        update_effects = {
+            make_wyrmling_effects(18 * scale, math.floor(180 * scale)),
+        },
+        backward_overlap = 4,
+        forward_padding = -1 * scale,  -- tiles
+        backward_padding = -4 * scale, -- tiles
+        render_layer = render_layer,
+        working_sound = {
+            main_sounds = {
+                sound = {
+                    filename = "__maraxsis__/sounds/wyrm-matriarch-swim.ogg",
+                    category = "enemy",
+                    priority = 127,
+                    volume = 0.5,
+                },
+                fade_in_ticks = 4,
+                fade_out_ticks = 20,
+                probability = 1,
+            },
+            use_doppler_shift = true,
+            persistent = false,
+            max_sounds_per_prototype = 4,
+        },
+        created_effect = created_effect,
+        integration_patch = {
+            filename = "__base__/graphics/entity/small-lamp/lamp-light.png",
+            priority = "high",
+            width = 90,
+            height = 78,
+            shift = util.by_pixel(0, -7),
+            scale = 12.5 * scale,
+            tint = {0.1, 0.1, 0.1, 0.1},
+            draw_as_light = true,
+        },
+        integration_patch_render_layer = "under-elevated",
+        --corpse = base_name .. "-corpse"
+    }
+end
+
+local function make_matriarch_segments(base_name, segment_scales, scale, damage_multiplier, health, sounds, render_layer)
+    local existing = {}
+    local prototypes = {}
+    local num_segments = #segment_scales
+    for i = 1, num_segments do
+        local segment_scale = segment_scales[i] * scale
+        if not existing[make_segment_name(base_name .. "-segment", segment_scale)] then
+            existing[make_segment_name(base_name .. "-segment", segment_scale)] = true
+            table.insert(prototypes, make_matriarch_segment(base_name, segment_scale, damage_multiplier, health, sounds, render_layer))
+        end
+    end
+    return prototypes
+end
+
+local function make_matriarch(
+    base_name,
+    order,
+    scale,
+    damage_multiplier,
+    health,
+    regen,
+    speed_multiplier,
+    factoriopedia_simulation,
+    sounds,
+    render_layer)
+    data:extend
+    {
+        make_matriarch_head(
+            base_name,
+            order,
+            scale,
+            damage_multiplier,
+            health,
+            regen,
+            speed_multiplier,
+            factoriopedia_simulation,
+            sounds,
+            render_layer
+        ),
+    }
+
+    data:extend(make_matriarch_segments(base_name, segment_scales, scale, damage_multiplier, health, sounds, render_layer))
+    --data:extend(make_matriarch_corpse(base_name, order, scale))
+end
+
+make_matriarch(
+    "wyrm-matriarch",
+    "maraxsis-d",
+    1.5,
+    1,
+    800000,
+    10,
+    4.65,
+    nil,
+    space_age_sounds.demolisher.big,
+    "fluid-visualization"
+)
+
+--- Copy+paste demolisher's attack for now, tinted blue.
+local BLUE = {0.35, 0.7, 1.0}
+local fissure_attack = make_demolisher_fissure_attack("maraxsis-wyrm-matriarch", "maraxsis-d", 1.5, 1)
+local function tint(animation)
+    if animation[1] or animation.layers then
+        for _, part in pairs(animation.layers or animation) do tint(part) end
+    else
+        animation.tint = BLUE
+    end
+end
+for _, prototype in pairs(fissure_attack) do
+    for _, key in pairs {"animations", "animation", "decay_animation"} do
+        if prototype[key] then tint(prototype[key]) end
+    end
+end
+data:extend(fissure_attack)
+
+local matriarch = data.raw["segmented-unit"]["maraxsis-wyrm-matriarch"]
+matriarch.revenge_attack_parameters = table.deepcopy(data.raw["segmented-unit"]["big-demolisher"].revenge_attack_parameters)
+for _, effect in pairs(matriarch.revenge_attack_parameters.ammo_type.action.action_delivery.target_effects) do
+    effect.entity_name = "maraxsis-wyrm-matriarch-fissure"
+end
+
