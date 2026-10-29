@@ -85,6 +85,7 @@ data:extend {{
 }}
 
 -- Adapted from Rubia & Alternative Rocket Sprite Extension.
+local rocket_shift = 48
 local rocket = util.table.deepcopy(data.raw["rocket-silo-rocket"]["rocket-silo-rocket"])
 rocket.name = "maraxsis-rocket-silo-rocket"
 rocket.localised_name = {"entity-name.rocket-silo-rocket"}
@@ -110,6 +111,37 @@ if settings.startup["maraxsis-fish-rocket"].value == true then
     rocket.rocket_smoke_top2_animation.hr_version = nil
     rocket.rocket_smoke_top3_animation.scale = 0.01
     rocket.rocket_smoke_top3_animation.hr_version = nil
+
+else
+    rocket.rocket_sprite =
+    {
+    layers =
+      {
+        util.sprite_load("__maraxsis__/graphics/entity/rocket-silo/maraxsis-new-rocket/rocket-static-pod",
+      {
+        dice_y = 4,
+        shift = util.by_pixel( 0, 17.0+rocket_shift),
+        scale = 0.5
+      }),
+      util.sprite_load("__maraxsis__/graphics/entity/rocket-silo/maraxsis-new-rocket/rocket-static-emission",
+      {
+        dice_y = 4,
+        shift = util.by_pixel( 0, 17+rocket_shift),
+        draw_as_glow = true,
+        blend_mode = "additive",
+        scale = 0.5
+      })
+    }
+    }
+    rocket.rocket_flame_animation = util.sprite_load("__maraxsis__/graphics/entity/rocket-silo/maraxsis-new-rocket/rocket-jet",
+    {
+      shift = util.by_pixel( 0, 17+rocket_shift),
+      draw_as_glow = true,
+      blend_mode = "additive",
+      scale = 0.5,
+      frame_count = 8,
+      animation_speed = 0.5
+    })
 end
 
 data:extend { rocket }
@@ -129,10 +161,30 @@ for surface in pairs(maraxsis_constants.MARAXSIS_SURFACES) do
             flags = {"placeable-player", "player-creation", "not-in-made-in"},
             hidden = true,
             hidden_in_factoriopedia = true,
+            base_day_sprite =
+                {
+                  filename = "__maraxsis__/graphics/entity/rocket-silo/06-rocket-silo.png",
+                  dice_y = 3,
+                  width = 608,
+                  height = 596,
+                  shift = util.by_pixel(3, -1),
+                  scale = 0.5
+                },
+            base_front_sprite =
+                {
+                  filename = "__maraxsis__/graphics/entity/rocket-silo/14-rocket-silo-front.png",
+                  width = 580,
+                  height = 262,
+                  shift = util.by_pixel(-1, 78),
+                  scale = 0.5
+                },
         },
         "maraxsis-runtime-entity-replacement",
         "rocket-silo"
     )
+    --separately (create_planet_entity_variant doesn't support all fields we edit)
+    data.raw["rocket-silo"]["maraxsis-rocket-silo"].graphics_set = nil --these are the welding and engine animation on the new new silo
+    data.raw["rocket-silo"]["maraxsis-rocket-silo"].working_sound.sound_accents = nil --these are the welding sounds
 
     -- https://github.com/notnotmelon/maraxsis/issues/417
     PlanetsLib.assign_rocket_part_recipe(surface, maraxsis_rocket_part.name)
