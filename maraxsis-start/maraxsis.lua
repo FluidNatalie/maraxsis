@@ -75,6 +75,7 @@ utils.add_recipes("cryogenic-plant", {"maraxsis-supercritical-steam-cooling"})
 utils.add_recipes("concrete", {"concrete-from-molten-iron", "stone-brick", "foundry"})
 utils.add_recipes("steel-processing", {"medium-electric-pole", "light-armor", "stone-furnace"})
 utils.add_recipes("space-platform", {"iron-plate", "copper-plate"})
+utils.add_recipes("maraxsis-hydro-plant", {"maraxsis-fiber-degradation"})
 
 utils.remove_recipes("maraxsis-piscary", {"maraxsis-microplastics", "maraxsis-smelt-microplastics", "maraxsis-nutrients-from-tropical-fish"})
 utils.remove_recipes("oil-processing", {"chemical-plant", "oil-refinery"})
@@ -256,3 +257,11 @@ table.insert(data.raw.technology["maraxsis-glassworking"].effects, 1, {
     space_location = "maraxsis-trench",
     use_icon_overlay_constant = true
 })
+
+--reduce the % chance of losing carbon fiber in the water filter loop from 2.5% to 0.1%
+for _, result in pairs(data.raw.recipe["maraxsis-salt-filter-cleaning"].results) do
+    if result.name == "carbon-fiber" then
+        assert(result.independent_probability == 0.025)
+        result.independent_probability = 0.049
+    end
+end
