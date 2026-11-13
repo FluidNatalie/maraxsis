@@ -1,4 +1,25 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.42.0
+Date: 2026-11-13
+  Features:
+    - a matriarch's paths go barren when she dies
+    - add the ooozma matriarch enemy from the hypnosis branch
+    - coral and polylplasts grow along the matriarch paths
+    - fishing towers take modules and can be built on any surface
+    - matriarch paths follow the territories
+    - matriarch territories follow the trench
+    - placeholder matriarch attack
+    - the trench floor is verdant along the matriarch paths
+    - turrets leave wyrm matriarchs alone until one is attacked
+    - wyrm bait catches a specimen when a matriarch swims past
+    - wyrm bait matures automatically
+    - wyrm confinement cells now need fish food
+    - wyrm matriarchs never hunt for targets
+    - wyrm matriarchs patrol territories in the trench
+    - wyrmlings drift around a matriarch
+  Bugfixes:
+    - a fishing tower in the trench doesn't farm tropical fish
+---------------------------------------------------------------------------------------------------
 Version: 1.41.2
 Date: 2026-11-13
   Bugfixes:
