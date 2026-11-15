@@ -47,7 +47,7 @@ local function calm_down(unit)
     make_passive(unit)
     --- If you set her to "patrolling" mode, you have to specify where she should
     --- go. Sending her "investigating" to her current location lets us skip that
-    --- since she transitions straight to "patrolling" after that.
+    --- since she transitions straight to "patrolling" after that. Yippee
     local destination = unit.segments[1].position or unit.get_body_nodes()[1]
     unit.set_ai_state {type = defines.segmented_unit_ai_state.investigating, destination = destination}
 end
