@@ -23,7 +23,7 @@ data:extend {{
     ingredients = {
         {type = "fluid", name = "steam", amount = 100},
         {type = "item", name = "carbon", amount = 2},
-        {type = "item", name = "maraxsis-fish-oil", amount = 1},
+        {type = "item", name = "maraxsis-fish-oil", amount = 1, quality_min = "normal", quality_max = "normal"},
     },
     results = {
         {type = "fluid", name = "heavy-oil", amount = 200},
