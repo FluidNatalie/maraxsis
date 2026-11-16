@@ -58,7 +58,13 @@ fishing_tower.max_health = 500
 fishing_tower.surface_conditions = nil
 fishing_tower.growth_grid_tile_size = 2
 fishing_tower.radius = 4
-fishing_tower.module_slots = 8
+fishing_tower.module_slots = 3
+fishing_tower.quality_affects_module_slots = true
+fishing_tower.icons_positioning = {{
+    inventory_index = defines.inventory.agricultural_tower_modules,
+    max_icons_per_row = 4,
+    scale = 0.6
+}}
 fishing_tower.allowed_effects = {"speed", "productivity", "quality", "consumption"}
 scale_sprite_recursive(fishing_tower.graphics_set)
 scale_sprite_recursive(fishing_tower.crane.parts)
@@ -66,6 +72,7 @@ fishing_tower.collision_box = {{-1.9, -1.9}, {1.9, 1.9}}
 fishing_tower.selection_box = {{-2, -2}, {2, 2}}
 fishing_tower.emissions_per_second = nil
 fishing_tower.output_inventory_size = 1
+fishing_tower.surface_conditions = maraxsis.surface_conditions()
 fishing_tower.accepted_seeds = {"maraxsis-fish-food", "maraxsis-ooozma-confinement-cell"}
 fishing_tower.energy_source.emissions_per_minute = nil
 fishing_tower.radius_visualisation_picture = {
