@@ -59,6 +59,12 @@ fishing_tower.surface_conditions = nil
 fishing_tower.growth_grid_tile_size = 2
 fishing_tower.radius = 4
 fishing_tower.module_slots = 8
+fishing_tower.quality_affects_module_slots = false
+fishing_tower.icons_positioning = {{
+    inventory_index = defines.inventory.agricultural_tower_modules,
+    max_icons_per_row = fishing_tower.module_slots / 2,
+    scale = 0.6
+}}
 fishing_tower.allowed_effects = {"speed", "productivity", "quality", "consumption"}
 scale_sprite_recursive(fishing_tower.graphics_set)
 scale_sprite_recursive(fishing_tower.crane.parts)
