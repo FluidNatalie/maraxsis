@@ -42,6 +42,13 @@ maraxsis_rocket_part.enabled = false
 maraxsis_rocket_part.surface_conditions = maraxsis.shallow_surface_conditions()
 maraxsis_rocket_part.auto_recycle = false
 maraxsis_rocket_part.order = data.raw.item["rocket-part"].order .. "-a[maraxsis]"
+maraxsis_rocket_part.ingredients = {
+    {type = "item", name = "advanced-circuit", amount = 1},
+    {type = "item", name = "rocket-fuel", amount = 1},
+    {type = "item", name = "maraxsis-super-sealant-substance", amount = 1},
+    {type = "item", name = "low-density-structure", amount = 1},
+}
+
 data:extend {maraxsis_rocket_part}
 
 data:extend {{
