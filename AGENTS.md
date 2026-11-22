@@ -236,7 +236,7 @@ One `compat/<mod>.lua` per supported mod, all currently required from a data sta
 - `data.lua`: `krastorio-2`
 - `data-updates.lua`: `aai-industry`, `aai-signal-transmission`, `editor-extensions`,
   `transport-ring-teleporter`, `quality-seeds`, `modules-t4`, `5-dim-automation`,
-  `rcu-restored`, `aircraft-space-age`, `corrundum`, `muluna`,
+  `aircraft-space-age`, `corrundum`, `muluna`,
   `aai-programmable-structures`
 - `data-final-fixes.lua`: `5-dim`, `alien-biomes`, `visible-planets-in-space`,
   `rocket-silo-construction`, `combat-mechanics-overhaul`, `castra`,
