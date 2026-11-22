@@ -30,7 +30,7 @@ PlanetsLib:extend {
     icon_size = 256,
     solar_power_in_space = 150,
     map_gen_settings = planet_map_gen.maraxsis(),
-    draw_orbit = false,
+    draw_orbit = true,
     subgroup = "planets",
     order = "e-z[maraxsis]",
     persistent_ambient_sounds = {},
